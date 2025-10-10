@@ -1,24 +1,49 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# ----------------------
+# Node.js / Backend
+# ----------------------
+/backend/node_modules/
+/backend/dist/
+/backend/build/
+/backend/.env
+/backend/npm-debug.log*
+/backend/yarn-debug.log*
+/backend/yarn-error.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# ----------------------
+# Vue / Frontend
+# ----------------------
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.env.local
+/frontend/.env.*.local
+/frontend/.DS_Store
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
+# Vite cache
+/frontend/.vite/
+/frontend/node_modules/.vite/
+
+# ----------------------
+# VSCode / IDE
+# ----------------------
+.vscode/
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# ----------------------
+# OS filer
+# ----------------------
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# ----------------------
+# Misc
+# ----------------------
+*.log
