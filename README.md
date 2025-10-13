@@ -25,7 +25,8 @@ The main purpose of this project is to **learn and improve my fullstack developm
 - Fetch recipe details by ID  
 - Save favorite recipes in MongoDB (title, image, mealId)  
 - Retrieve and delete favorites via API  
-- Basic backend setup: models, routes, server, and database connection  
+- Basic backend setup: models, routes, server, and database connection
+- Backend tests using Jest & Supertest to verify recipes and favorites functionality
 
 **Planned / Future Enhancements:**
 - Filtering and sorting (e.g. “quick”, “vegetarian”)  
@@ -33,3 +34,20 @@ The main purpose of this project is to **learn and improve my fullstack developm
 - Dark mode support  
 - User authentication  
 - Improved responsive layout and animations  
+
+---
+
+## 🧪 Testing
+
+Backend tests are implemented using Jest and Supertest.
+
+**Tests cover:**
+- Searching recipes (recipes.test.js)
+- Fetching recipe details by ID
+- Handling unknown search queries
+- CRUD operations for favorites (favorites.test.js)
+
+Tests run against a separate test database (recipe-app-test) to avoid affecting production data.
+
+**Run tests with:**
+```npm run test```
