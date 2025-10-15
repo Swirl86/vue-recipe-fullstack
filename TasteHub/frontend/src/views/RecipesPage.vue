@@ -4,9 +4,3 @@
         <p>TODO DISPLAY RECIPES LIST</p>
     </div>
 </template>
-
-<script>
-export default {
-    name: "RecipesPage",
-};
-</script>
