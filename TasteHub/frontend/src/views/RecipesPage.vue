@@ -29,19 +29,20 @@
                 />
             </div>
 
-            <!-- Recipe grid -->
-            <RecipeList :recipes="recipes" />
+            <div v-if="loading">
+                <LoadingState />
+            </div>
 
-            <!-- Loading/Empty state -->
-            <div v-if="loading" class="text-center mt-12 text-gray-500 dark:text-gray-300">
-                Loading...
+            <div v-else-if="error">
+                <ErrorState :message="error" />
             </div>
-            <div
-                v-if="!loading && recipes.length === 0"
-                class="text-center mt-12 text-gray-500 dark:text-gray-300"
-            >
-                No recipes found.
+
+            <div v-else-if="recipes.length === 0">
+                <EmptyState :search-query="searchQuery" />
             </div>
+
+            <!-- Recipe grid -->
+            <RecipeList v-else :recipes="recipes" />
         </div>
     </Layout>
 </template>
@@ -50,12 +51,16 @@
 import { fetchRecipes, searchRecipes } from "@/api/recipes.js";
 import Layout from "@/components/Layout.vue";
 import RecipeList from "@/components/recipe/RecipeList.vue";
+import EmptyState from "@/components/ui/EmptyState.vue";
+import ErrorState from "@/components/ui/ErrorState.vue";
+import LoadingState from "@/components/ui/LoadingState.vue";
 import SearchInput from "@/components/ui/SearchInput.vue";
 import { onMounted, ref } from "vue";
 
 const recipes = ref([]);
 const searchQuery = ref("");
 const loading = ref(true);
+const error = ref(null);
 
 async function loadRecipes() {
     loading.value = true;
@@ -63,6 +68,7 @@ async function loadRecipes() {
         recipes.value = await fetchRecipes();
     } catch (err) {
         console.error(err);
+        error.value = "Failed to load recipes. Please try again later.";
     } finally {
         loading.value = false;
     }
@@ -78,6 +84,7 @@ async function searchRecipesHandler() {
         }
     } catch (err) {
         console.error(err);
+        error.value = "Something went wrong while searching.";
     } finally {
         loading.value = false;
     }
