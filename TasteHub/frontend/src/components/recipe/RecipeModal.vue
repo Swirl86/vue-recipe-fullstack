@@ -118,7 +118,8 @@
                                 textAlign: 'left',
                             }"
                         >
-                            <li v-for="(ing, index) in recipe?.ingredients" :key="index">
+                            <li v-for="(ing, index) in recipe?.ingredients" :key="ing">
+                                {{ recipe?.measures[index] }}
                                 {{ ing }}
                             </li>
                         </ul>

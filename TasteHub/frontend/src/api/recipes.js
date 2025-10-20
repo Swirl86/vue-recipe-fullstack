@@ -10,9 +10,7 @@ export async function fetchRecipes() {
         name: meal.strMeal,
         category: meal.strCategory,
         area: meal.strArea,
-        instructions: meal.strInstructions,
         thumbnail: meal.strMealThumb,
-        youtube: meal.strYoutube || null,
     }));
 }
 

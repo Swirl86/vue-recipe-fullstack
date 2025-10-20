@@ -3,7 +3,5 @@ export const Recipe = {
     name: "",
     category: "",
     area: "",
-    instructions: "",
     thumbnail: "",
-    youtube: null,
 };
