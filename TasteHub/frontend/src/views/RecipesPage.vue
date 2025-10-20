@@ -29,6 +29,7 @@
                 />
             </div>
 
+            <!-- Loading / Error / Empty states -->
             <div v-if="loading">
                 <LoadingState />
             </div>
@@ -42,7 +43,14 @@
             </div>
 
             <!-- Recipe grid -->
-            <RecipeList v-else :recipes="recipes" />
+            <RecipeList v-else :recipes="recipes" @select="openRecipe" />
+
+            <RecipeModal
+                v-if="selectedRecipeId"
+                :recipe-id="selectedRecipeId"
+                :visible="showModal"
+                @close="closeModal"
+            />
         </div>
     </Layout>
 </template>
@@ -51,19 +59,23 @@
 import { fetchRecipes, searchRecipes } from "@/api/recipes.js";
 import Layout from "@/components/Layout.vue";
 import RecipeList from "@/components/recipe/RecipeList.vue";
+import RecipeModal from "@/components/recipe/RecipeModal.vue";
 import EmptyState from "@/components/ui/EmptyState.vue";
 import ErrorState from "@/components/ui/ErrorState.vue";
 import LoadingState from "@/components/ui/LoadingState.vue";
 import SearchInput from "@/components/ui/SearchInput.vue";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const recipes = ref([]);
 const searchQuery = ref("");
 const loading = ref(true);
 const error = ref(null);
+const selectedRecipeId = ref(null);
+const showModal = ref(false);
 
 async function loadRecipes() {
     loading.value = true;
+    error.value = null;
     try {
         recipes.value = await fetchRecipes();
     } catch (err) {
@@ -76,6 +88,7 @@ async function loadRecipes() {
 
 async function searchRecipesHandler() {
     loading.value = true;
+    error.value = null;
     try {
         if (!searchQuery.value.trim()) {
             await loadRecipes();
@@ -89,6 +102,24 @@ async function searchRecipesHandler() {
         loading.value = false;
     }
 }
+
+function openRecipe(recipe) {
+    selectedRecipeId.value = recipe._id;
+    showModal.value = true;
+}
+
+function closeModal() {
+    showModal.value = false;
+    selectedRecipeId.value = null;
+}
+
+watch(showModal, (isOpen) => {
+    if (isOpen) {
+        document.body.style.overflow = "hidden";
+    } else {
+        document.body.style.overflow = "";
+    }
+});
 
 onMounted(loadRecipes);
 </script>

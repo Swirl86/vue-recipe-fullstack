@@ -1,0 +1,16 @@
+export const RecipeDetail = {
+    _id: "",
+    name: "",
+    category: "",
+    area: "",
+    instructions: "",
+    thumbnail: "",
+    youtube: null,
+    ingredients: [],
+    measures: [],
+    tags: [],
+    source: null,
+    imageSource: null,
+    creativeCommonsConfirmed: false,
+    dateModified: null,
+};

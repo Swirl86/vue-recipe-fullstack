@@ -1,6 +1,7 @@
 <template>
     <div
-        class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:scale-105 transform transition-all duration-300"
+        class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:scale-105 transform transition-all duration-300 cursor-pointer"
+        @click="emit('select', recipe)"
     >
         <img
             :src="recipe.thumbnail || '/assets/no_img.png'"
@@ -8,7 +9,9 @@
             class="w-full h-48 object-cover"
         />
         <div class="p-4">
-            <h2 class="font-bold text-xl mb-1">{{ recipe.name }}</h2>
+            <h2 class="font-bold text-xl mb-1 text-gray-900 dark:text-white">
+                {{ recipe.name }}
+            </h2>
             <p class="text-sm text-gray-600 dark:text-gray-300">
                 {{ recipe.category }} | {{ recipe.area }}
             </p>
@@ -17,7 +20,12 @@
 </template>
 
 <script setup>
-defineProps({
-    recipe: Object,
+const props = defineProps({
+    recipe: {
+        type: Object,
+        required: true,
+    },
 });
+
+const emit = defineEmits(["select"]);
 </script>
