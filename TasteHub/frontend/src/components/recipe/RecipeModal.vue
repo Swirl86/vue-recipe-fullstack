@@ -5,40 +5,19 @@
         @click.self="close"
     >
         <div
-            class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-[90rem] mx-auto h-[88vh] flex flex-col overflow-hidden relative"
+            class="bg-[#fefbea] dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-[90rem] mx-auto h-[88vh] flex flex-col relative overflow-y-auto p-6"
         >
             <!-- Close button -->
             <button
                 @click="close"
-                class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 text-3xl z-10"
+                class="absolute top-4 right-8 md:right-10 w-10 h-10 flex items-center justify-center rounded-full bg-gray-200/70 dark:bg-gray-700/70 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-110 transition-transform duration-200 z-50 backdrop-blur-sm shadow-md"
             >
                 ✖
             </button>
 
-            <!-- Image (upper part) -->
-            <div class="w-full h-64 md:h-80 relative overflow-hidden rounded-t-3xl">
-                <img
-                    :src="recipe?.thumbnail || '/assets/no_img.png'"
-                    :alt="recipe?.name"
-                    class="w-full h-full object-cover"
-                />
-
-                <div
-                    class="absolute bottom-4 right-4 bg-gray-200 dark:bg-gray-700 rounded-xl shadow-lg p-1 flex items-center justify-center overflow-hidden w-28 h-28 border border-gray-300 dark:border-gray-600 transition-transform duration-300 hover:scale-110"
-                >
-                    <img
-                        :src="recipe?.thumbnail || '/assets/no_img.png'"
-                        :alt="recipe?.name"
-                        class="max-w-full max-h-full object-contain rounded-lg"
-                    />
-                </div>
-            </div>
-
-            <!-- Content (lower part) -->
-            <div
-                class="p-6 flex-1 flex flex-col overflow-y-auto space-y-4 bg-gray-50 dark:bg-gray-900 rounded-b-3xl"
-            >
-                <!-- Loading & error states -->
+            <!-- Scrollable content wrapper -->
+            <div class="relative overflow-y-auto flex-1 p-4">
+                <!-- Loading & error -->
                 <div v-if="loading" class="text-center text-gray-500 dark:text-gray-400 mt-4">
                     Loading recipe details...
                 </div>
@@ -46,34 +25,26 @@
                     {{ error }}
                 </div>
 
-                <div class="max-w-5xl mx-auto px-4 flex flex-col items-center space-y-4 mb-6">
-                    <!-- Row 1: Title & optional YouTube -->
-                    <div
-                        class="w-full flex flex-col md:flex-row justify-center md:justify-center items-center gap-4"
-                    >
+                <!-- Top Content -->
+                <div v-else class="flex flex-col items-center md:flex-row gap-6">
+                    <!-- Image -->
+                    <div class="w-full md:w-1/5 rounded-3xl overflow-hidden flex-shrink-0 max-h-96">
+                        <img
+                            :src="recipe?.thumbnail || '/assets/no_img.png'"
+                            :alt="recipe?.name"
+                            class="w-full h-full object-cover"
+                        />
+                    </div>
+
+                    <div class="w-full md:w-2/3 flex flex-col items-center gap-4 text-center">
+                        <!-- Title -->
                         <h2
-                            class="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight text-center"
+                            class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white text-center"
                         >
                             {{ recipe?.name }}
                         </h2>
-
-                        <div v-if="recipe?.youtube" class="mt-2 md:mt-0">
-                            <a
-                                :href="recipe?.youtube"
-                                target="_blank"
-                                class="text-pink-600 dark:text-pink-400 hover:underline font-medium"
-                            >
-                                ▶ Watch on YouTube
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Row 2: Category & Area / Tags -->
-                    <div
-                        class="w-full flex flex-col md:flex-row justify-center md:justify-between items-center gap-4"
-                    >
                         <!-- Category & Area -->
-                        <div class="flex gap-2 flex-wrap justify-center md:justify-start">
+                        <div class="flex flex-wrap justify-center gap-2 pt-2">
                             <span
                                 class="px-3 py-1 bg-pink-100 dark:bg-pink-700 text-pink-800 dark:text-pink-200 font-semibold rounded-full text-sm"
                             >
@@ -85,12 +56,8 @@
                                 {{ recipe?.area }}
                             </span>
                         </div>
-
                         <!-- Tags -->
-                        <div
-                            v-if="recipe?.tags?.length"
-                            class="flex gap-2 flex-wrap justify-center md:justify-end mt-2 md:mt-0"
-                        >
+                        <div class="flex flex-wrap justify-center gap-2">
                             <span
                                 v-for="(tag, index) in recipe?.tags"
                                 :key="index"
@@ -99,44 +66,50 @@
                                 {{ tag }}
                             </span>
                         </div>
+                        <!-- YouTube Link -->
+                        <div v-if="recipe?.youtube">
+                            <a
+                                :href="recipe?.youtube"
+                                target="_blank"
+                                class="text-pink-600 dark:text-pink-400 hover:underline font-medium"
+                            >
+                                ▶ Watch on YouTube
+                            </a>
+                        </div>
                     </div>
                 </div>
 
-                <div class="flex flex-col md:flex-row gap-6 flex-1 overflow-hidden">
+                <!-- Bottom Content -->
+                <div class="flex flex-col md:flex-row gap-6 mt-6">
                     <!-- Ingredients -->
-                    <div class="md:w-5/12 overflow-y-auto pr-4">
+                    <div class="w-full md:w-auto min-w-[12rem] pl-6 pr-6 mb-4 md:mb-0">
                         <h3
-                            class="text-2xl font-semibold text-left text-gray-900 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2"
+                            class="text-2xl font-semibold text-left text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b-4 border-gray-300 dark:border-gray-700"
                         >
                             🧂 Ingredients
                         </h3>
-
                         <ul
-                            class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-1"
-                            :style="{
-                                columnCount: ingredientColumnCount,
-                                textAlign: 'left',
-                            }"
+                            class="list-disc text-gray-700 dark:text-gray-300 space-y-1 ml-4 text-left w-auto max-w-full"
                         >
-                            <li v-for="(ing, index) in recipe?.ingredients" :key="ing">
-                                {{ recipe?.measures[index] }}
-                                {{ ing }}
+                            <li
+                                v-for="(ing, index) in recipe?.ingredients"
+                                :key="ing"
+                                class="break-words py-1 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+                            >
+                                {{ recipe?.measures[index] }} {{ ing }}
                             </li>
                         </ul>
                     </div>
 
-                    <!-- Divider -->
-                    <div class="hidden md:block w-px bg-gray-300 dark:bg-gray-600"></div>
-
                     <!-- Instructions -->
-                    <div class="md:w-7/12 overflow-y-auto pl-4 pr-6">
+                    <div class="w-full flex-1 pl-6">
                         <h3
-                            class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2 flex items-center gap-2"
+                            class="text-2xl font-semibold text-left text-gray-900 dark:text-gray-100 mb-4 border-b-4 border-gray-300 dark:border-gray-700 pb-2"
                         >
                             🍳 Instructions
                         </h3>
                         <p
-                            class="text-left text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line"
+                            class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line text-left"
                         >
                             {{ recipe?.instructions }}
                         </p>
@@ -149,7 +122,7 @@
 
 <script setup>
 import { fetchRecipeDetail } from "@/api/recipes.js";
-import { computed, ref, watch } from "vue";
+import { ref, watch } from "vue";
 
 const props = defineProps({
     visible: Boolean,
@@ -182,14 +155,6 @@ async function loadRecipe() {
     }
 }
 
-// Determine column count: max 2
-const ingredientColumnCount = computed(() => {
-    const count = recipe.value?.ingredients?.length || 0;
-    if (count <= 6) return 1;
-    if (count <= 12) return 2;
-    return 2;
-});
-
 // Fetch recipe details when recipeId changes
 watch(() => props.recipeId, loadRecipe, { immediate: true });
 </script>
@@ -209,5 +174,27 @@ watch(() => props.recipeId, loadRecipe, { immediate: true });
 
 div[v-cloak] > div {
     animation: fadeInScale 0.2s ease-out;
+}
+
+.relative.overflow-y-auto::-webkit-scrollbar {
+    width: 8px;
+}
+
+.relative.overflow-y-auto::-webkit-scrollbar-thumb {
+    background-color: rgba(107, 114, 128, 0.4);
+    border-radius: 9999px;
+}
+
+.relative.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(107, 114, 128, 0.6);
+}
+
+.relative.overflow-y-auto::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.relative.overflow-y-auto {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(107, 114, 128, 0.4) transparent;
 }
 </style>
