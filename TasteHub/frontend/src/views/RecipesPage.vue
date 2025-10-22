@@ -20,13 +20,14 @@
                 <span>Recipes 👩‍🍳</span>
             </h1>
 
-            <!-- Search field -->
-            <div class="flex justify-center mb-12">
+            <!-- Search field + Filter -->
+            <div class="flex justify-center items-center gap-4 mb-12">
                 <SearchInput
                     v-model="searchQuery"
                     placeholder="Search recipes..."
                     @input="searchRecipesHandler"
                 />
+                <RecipeFilterDropdown @apply="applyFilters" />
             </div>
 
             <!-- Loading / Error / Empty states -->
@@ -63,6 +64,7 @@ import RecipeModal from "@/components/recipe/RecipeModal.vue";
 import EmptyState from "@/components/ui/EmptyState.vue";
 import ErrorState from "@/components/ui/ErrorState.vue";
 import LoadingState from "@/components/ui/LoadingState.vue";
+import RecipeFilterDropdown from "@/components/ui/RecipeFilterDropdown.vue";
 import SearchInput from "@/components/ui/SearchInput.vue";
 import { onMounted, ref, watch } from "vue";
 
@@ -101,6 +103,11 @@ async function searchRecipesHandler() {
     } finally {
         loading.value = false;
     }
+}
+
+function applyFilters(filters) {
+    console.log("Applied filters:", filters);
+    // TODO: filtrera recepten baserat på valda filter
 }
 
 function openRecipe(recipe) {

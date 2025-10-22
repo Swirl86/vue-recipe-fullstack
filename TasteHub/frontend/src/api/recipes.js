@@ -14,6 +14,14 @@ export async function fetchRecipes() {
     }));
 }
 
+export async function fetchFilterLists() {
+    const res = await fetch(`${BASE_URL}/recipes/filters`);
+    if (!res.ok) throw new Error("Failed to fetch filter lists");
+    const data = await res.json();
+    console.log("Fetched filter lists:", data);
+    return data;
+}
+
 export async function searchRecipes(query) {
     const res = await fetch(`${BASE_URL}/recipes?q=${encodeURIComponent(query)}`);
     if (!res.ok) throw new Error("Failed to search recipes");
