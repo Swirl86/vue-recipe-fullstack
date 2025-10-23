@@ -18,8 +18,39 @@ export async function fetchFilterLists() {
     const res = await fetch(`${BASE_URL}/recipes/filters`);
     if (!res.ok) throw new Error("Failed to fetch filter lists");
     const data = await res.json();
-    console.log("Fetched filter lists:", data);
     return data;
+}
+
+export async function fetchFilteredRecipes(filterType, option) {
+    if (!filterType || !option) return [];
+
+    let params = {};
+    switch (filterType) {
+        case "Area":
+            params = { a: option };
+            break;
+        case "Category":
+            params = { c: option };
+            break;
+        case "Ingredient":
+            params = { i: option };
+            break;
+    }
+
+    const queryString = new URLSearchParams(params).toString();
+    const res = await fetch(`${BASE_URL}/recipes/filter?${queryString}`);
+    if (!res.ok) throw new Error("Failed to fetch filtered recipes");
+
+    const data = await res.json();
+    console.log(`Fetched recipes filtered by ${filterType}=${option}:`, data);
+
+    return (data.meals || []).map((meal) => ({
+        _id: meal.idMeal,
+        name: meal.strMeal,
+        thumbnail: meal.strMealThumb,
+        category: filterType === "Category" ? option : meal.strCategory || "",
+        area: filterType === "Area" ? option : meal.strArea || "",
+    }));
 }
 
 export async function searchRecipes(query) {

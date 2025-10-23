@@ -69,6 +69,20 @@ router.get("/filters", async (req, res) => {
     }
 });
 
+router.get("/filter", async (req, res) => {
+    try {
+        const { a, c, i } = req.query; // area, category, ingredient
+        const params = { a, c, i };
+        const filteredParams = Object.fromEntries(Object.entries(params).filter(([_, v]) => v));
+
+        const response = await axios.get(`${API_BASE}/filter.php`, { params: filteredParams });
+
+        res.json(response.data);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 // GET recipe details by id
 router.get("/:id", async (req, res) => {
     try {

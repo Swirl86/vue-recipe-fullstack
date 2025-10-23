@@ -21,13 +21,13 @@
             </h1>
 
             <!-- Search field + Filter -->
-            <div class="flex justify-center items-center gap-4 mb-12">
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12">
                 <SearchInput
                     v-model="searchQuery"
                     placeholder="Search recipes..."
                     @input="searchRecipesHandler"
                 />
-                <RecipeFilterDropdown @apply="applyFilters" />
+                <RecipeFilterDropdown class="h-[58px]" @apply="applyFilters" />
             </div>
 
             <!-- Loading / Error / Empty states -->
@@ -57,7 +57,7 @@
 </template>
 
 <script setup>
-import { fetchRecipes, searchRecipes } from "@/api/recipes.js";
+import { fetchFilteredRecipes, fetchRecipes, searchRecipes } from "@/api/recipes.js";
 import Layout from "@/components/Layout.vue";
 import RecipeList from "@/components/recipe/RecipeList.vue";
 import RecipeModal from "@/components/recipe/RecipeModal.vue";
@@ -105,9 +105,21 @@ async function searchRecipesHandler() {
     }
 }
 
-function applyFilters(filters) {
-    console.log("Applied filters:", filters);
-    // TODO: filtrera recepten baserat på valda filter
+async function applyFilters(filters) {
+    loading.value = true;
+    error.value = null;
+    try {
+        if (!filters.type && !filters.value) {
+            recipes.value = await fetchRecipes();
+        } else {
+            recipes.value = await fetchFilteredRecipes(filters.type, filters.value);
+        }
+    } catch (err) {
+        console.error(err);
+        error.value = "Failed to fetch recipes.";
+    } finally {
+        loading.value = false;
+    }
 }
 
 function openRecipe(recipe) {
