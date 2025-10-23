@@ -20,13 +20,14 @@
                 <span>Recipes 👩‍🍳</span>
             </h1>
 
-            <!-- Search field -->
-            <div class="flex justify-center mb-12">
+            <!-- Search field + Filter -->
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12">
                 <SearchInput
                     v-model="searchQuery"
                     placeholder="Search recipes..."
                     @input="searchRecipesHandler"
                 />
+                <RecipeFilterDropdown class="h-[58px]" @apply="applyFilters" />
             </div>
 
             <!-- Loading / Error / Empty states -->
@@ -56,13 +57,14 @@
 </template>
 
 <script setup>
-import { fetchRecipes, searchRecipes } from "@/api/recipes.js";
+import { fetchFilteredRecipes, fetchRecipes, searchRecipes } from "@/api/recipes.js";
 import Layout from "@/components/Layout.vue";
 import RecipeList from "@/components/recipe/RecipeList.vue";
 import RecipeModal from "@/components/recipe/RecipeModal.vue";
 import EmptyState from "@/components/ui/EmptyState.vue";
 import ErrorState from "@/components/ui/ErrorState.vue";
 import LoadingState from "@/components/ui/LoadingState.vue";
+import RecipeFilterDropdown from "@/components/ui/RecipeFilterDropdown.vue";
 import SearchInput from "@/components/ui/SearchInput.vue";
 import { onMounted, ref, watch } from "vue";
 
@@ -98,6 +100,23 @@ async function searchRecipesHandler() {
     } catch (err) {
         console.error(err);
         error.value = "Something went wrong while searching.";
+    } finally {
+        loading.value = false;
+    }
+}
+
+async function applyFilters(filters) {
+    loading.value = true;
+    error.value = null;
+    try {
+        if (!filters.type && !filters.value) {
+            recipes.value = await fetchRecipes();
+        } else {
+            recipes.value = await fetchFilteredRecipes(filters.type, filters.value);
+        }
+    } catch (err) {
+        console.error(err);
+        error.value = "Failed to fetch recipes.";
     } finally {
         loading.value = false;
     }
