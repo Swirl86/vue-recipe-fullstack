@@ -133,7 +133,7 @@
 <script setup>
 import { fetchFilterLists } from "@/api/recipes.js";
 import { withLoadingAndErrorState } from "@/utils/apiHelper.js";
-import { getOptionsByType, updateFiltersState } from "@/utils/filters.js";
+import { getOptionsByType, updateFiltersState } from "@/utils/filtersHelper.js";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
 const emit = defineEmits(["apply"]);

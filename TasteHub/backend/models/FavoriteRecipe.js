@@ -1,9 +1,11 @@
 import mongoose from "mongoose";
 
 const FavoriteRecipeSchema = new mongoose.Schema({
-    title: { type: String, required: true },
-    image: String,
-    mealId: Number,
+    recipeId: { type: String, required: true },
+    name: { type: String, required: true },
+    thumbnail: String,
+    category: String,
+    area: String,
     createdAt: { type: Date, default: Date.now },
 });
 

@@ -1,8 +1,10 @@
 <template>
     <div
-        class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:scale-105 transform transition-all duration-300 cursor-pointer"
+        class="relative bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:scale-105 transform transition-all duration-300 cursor-pointer"
         @click="emit('select', recipe)"
     >
+        <FavoriteButton :isFavorite="isFavorite" @toggle="toggleFavorite" />
+
         <div class="w-full max-w-xs sm:max-w-sm md:max-w-md aspect-[4/3] mx-auto">
             <img
                 :src="recipe.thumbnail || '/assets/no_img.png'"
@@ -25,12 +27,23 @@
 </template>
 
 <script setup>
+import FavoriteButton from "@/components/ui/FavoriteButton.vue";
+import { ref, watch } from "vue";
+
 const props = defineProps({
-    recipe: {
-        type: Object,
-        required: true,
-    },
+    recipe: Object,
 });
 
-const emit = defineEmits(["select"]);
+const emit = defineEmits(["select", "favorite"]);
+
+const isFavorite = ref(props.recipe.isFavorite);
+
+function toggleFavorite() {
+    emit("favorite", props.recipe);
+}
+
+watch(
+    () => props.recipe.isFavorite,
+    (newVal) => (isFavorite.value = newVal)
+);
 </script>

@@ -44,7 +44,7 @@
             </div>
 
             <!-- Recipe grid -->
-            <RecipeList v-else :recipes="recipes" @select="openRecipe" />
+            <RecipeList v-else :recipes="recipes" @select="openRecipe" @favorite="handleFavorite" />
 
             <RecipeModal
                 v-if="selectedRecipeId"
@@ -57,6 +57,7 @@
 </template>
 
 <script setup>
+import { addFavorite, deleteFavorite, fetchFavorites } from "@/api/favorites.js";
 import { fetchRecipes, searchRecipes } from "@/api/recipes.js";
 import Layout from "@/components/Layout.vue";
 import RecipeList from "@/components/recipe/RecipeList.vue";
@@ -67,24 +68,72 @@ import FilterDropdown from "@/components/ui/FilterDropdown.vue";
 import LoadingState from "@/components/ui/LoadingState.vue";
 import SearchBar from "@/components/ui/SearchBar.vue";
 import { withLoadingAndErrorState } from "@/utils/apiHelper.js";
-import { fetchRecipesByFilter } from "@/utils/filters.js";
+import { markFavorites } from "@/utils/favoritesHelper.js";
+import { fetchRecipesByFilter } from "@/utils/filtersHelper.js";
 import { onMounted, ref, watch } from "vue";
 
 const recipes = ref([]);
+const favorites = ref([]);
+
 const searchQuery = ref("");
+
 const loading = ref(true);
 const error = ref(null);
+
 const selectedRecipeId = ref(null);
 const showModal = ref(false);
 
-async function loadRecipes() {
-    const data = await withLoadingAndErrorState(
-        fetchRecipes,
-        loading,
-        error,
-        "Failed to load recipes"
-    );
-    if (data) recipes.value = data;
+async function loadData() {
+    try {
+        await loadFavorites();
+
+        const data = await withLoadingAndErrorState(
+            fetchRecipes,
+            loading,
+            error,
+            "Failed to load recipes"
+        );
+
+        if (data) {
+            recipes.value = markFavorites(data, favorites.value);
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function loadFavorites() {
+    error.value = null;
+    try {
+        favorites.value = await fetchFavorites();
+    } catch (err) {
+        error.value = err.message || "Failed to load favorites";
+    }
+}
+
+async function handleFavorite(recipe) {
+    error.value = null;
+    try {
+        const existing = favorites.value.find((f) => f.recipeId === recipe._id);
+
+        if (existing) {
+            await deleteFavorite(existing._id);
+            favorites.value = favorites.value.filter((f) => f._id !== existing._id);
+        } else {
+            const newFav = await addFavorite({
+                recipeId: recipe._id,
+                name: recipe.name,
+                thumbnail: recipe.thumbnail,
+                category: recipe.category || "",
+                area: recipe.area || "",
+            });
+            favorites.value.push(newFav);
+        }
+
+        recipes.value = markFavorites(recipes.value, favorites.value);
+    } catch (err) {
+        error.value = err.message || "Failed to update favorite";
+    }
 }
 
 async function searchRecipesHandler() {
@@ -101,9 +150,7 @@ async function searchRecipesHandler() {
         "Something went wrong while searching."
     );
 
-    if (data) {
-        recipes.value = data;
-    }
+    if (data) recipes.value = markFavorites(data, favorites.value);
 }
 
 async function applyFilters(filters) {
@@ -113,10 +160,8 @@ async function applyFilters(filters) {
         error,
         "Failed to fetch recipes."
     );
-
-    if (data) {
-        recipes.value = data;
-    }
+    searchQuery.value = "";
+    if (data) recipes.value = markFavorites(data, favorites.value);
 }
 
 function openRecipe(recipe) {
@@ -137,5 +182,5 @@ watch(showModal, (isOpen) => {
     }
 });
 
-onMounted(loadRecipes);
+onMounted(loadData);
 </script>

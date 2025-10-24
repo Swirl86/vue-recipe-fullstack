@@ -1,6 +1,10 @@
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api";
-import { buildFilterParams } from "@/utils/filters.js";
+import { buildFilterParams } from "@/utils/filtersHelper.js";
 
+/**
+ * Fetch all recipes from the backend API.
+ * @returns {Promise<Array<Object>>} Array of recipe objects
+ */
 export async function fetchRecipes() {
     const res = await fetch(`${BASE_URL}/recipes`);
     if (!res.ok) throw new Error("Failed to fetch recipes");
@@ -15,6 +19,10 @@ export async function fetchRecipes() {
     }));
 }
 
+/**
+ * Fetch available filter lists (categories, areas, etc.) from the backend.
+ * @returns {Promise<Object>} Filter lists object
+ */
 export async function fetchFilterLists() {
     const res = await fetch(`${BASE_URL}/recipes/filters`);
     if (!res.ok) throw new Error("Failed to fetch filter lists");
@@ -22,6 +30,12 @@ export async function fetchFilterLists() {
     return data;
 }
 
+/**
+ * Fetch recipes filtered by a specific type and option.
+ * @param {string} filterType - The type of filter (e.g., "Category", "Area")
+ * @param {string} option - The filter option value
+ * @returns {Promise<Array<Object>>} Array of filtered recipes
+ */
 export async function fetchFilteredRecipes(filterType, option) {
     if (!filterType || !option) return [];
 
@@ -43,6 +57,11 @@ export async function fetchFilteredRecipes(filterType, option) {
     }));
 }
 
+/**
+ * Search recipes by query string.
+ * @param {string} query - Search term
+ * @returns {Promise<Array<Object>>} Array of recipes matching the search
+ */
 export async function searchRecipes(query) {
     const res = await fetch(`${BASE_URL}/recipes?q=${encodeURIComponent(query)}`);
     if (!res.ok) throw new Error("Failed to search recipes");
@@ -58,6 +77,11 @@ export async function searchRecipes(query) {
     }));
 }
 
+/**
+ * Fetch detailed information for a specific recipe by ID.
+ * @param {string} id - Recipe ID
+ * @returns {Promise<Object>} Detailed recipe object
+ */
 export async function fetchRecipeDetail(id) {
     const res = await fetch(`${BASE_URL}/recipes/${id}`);
     if (!res.ok) throw new Error("Failed to fetch recipe detail");

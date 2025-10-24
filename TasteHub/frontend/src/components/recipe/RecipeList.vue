@@ -5,6 +5,7 @@
             :key="recipe._id"
             :recipe="recipe"
             @select="$emit('select', $event)"
+            @favorite="$emit('favorite', $event)"
         />
     </div>
 </template>
@@ -16,5 +17,5 @@ defineProps({
     recipes: Array,
 });
 
-const emit = defineEmits(["select"]);
+const emit = defineEmits(["select", "favorite"]);
 </script>
