@@ -35,7 +35,7 @@
         <!-- Button -->
         <router-link
             to="/recipes"
-            class="relative z-10 font-bold py-3 px-10 rounded-full shadow-lg transform transition-all hover:-translate-y-1 hover:scale-105 hover:shadow-2xl focus:ring-4 bg-white text-pink-600 focus:ring-pink-300 dark:bg-gray-700 dark:text-pink-300 dark:focus:ring-pink-500"
+            class="relative z-20 font-bold py-3 px-10 rounded-full shadow-lg transform transition-all hover:-translate-y-1 hover:scale-105 hover:shadow-2xl focus:ring-4 bg-white text-pink-600 focus:ring-pink-300 dark:bg-gray-700 dark:text-pink-300 dark:focus:ring-pink-500"
         >
             🍳 Get Started
         </router-link>

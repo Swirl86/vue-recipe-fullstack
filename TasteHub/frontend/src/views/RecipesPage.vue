@@ -22,12 +22,12 @@
 
             <!-- Search field + Filter -->
             <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12">
-                <SearchInput
+                <SearchBar
                     v-model="searchQuery"
                     placeholder="Search recipes..."
                     @input="searchRecipesHandler"
                 />
-                <RecipeFilterDropdown class="h-[58px]" @apply="applyFilters" />
+                <FilterDropdown class="h-[58px]" @apply="applyFilters" />
             </div>
 
             <!-- Loading / Error / Empty states -->
@@ -57,15 +57,17 @@
 </template>
 
 <script setup>
-import { fetchFilteredRecipes, fetchRecipes, searchRecipes } from "@/api/recipes.js";
+import { fetchRecipes, searchRecipes } from "@/api/recipes.js";
 import Layout from "@/components/Layout.vue";
 import RecipeList from "@/components/recipe/RecipeList.vue";
 import RecipeModal from "@/components/recipe/RecipeModal.vue";
 import EmptyState from "@/components/ui/EmptyState.vue";
 import ErrorState from "@/components/ui/ErrorState.vue";
+import FilterDropdown from "@/components/ui/FilterDropdown.vue";
 import LoadingState from "@/components/ui/LoadingState.vue";
-import RecipeFilterDropdown from "@/components/ui/RecipeFilterDropdown.vue";
-import SearchInput from "@/components/ui/SearchInput.vue";
+import SearchBar from "@/components/ui/SearchBar.vue";
+import { withLoadingAndErrorState } from "@/utils/apiHelper.js";
+import { fetchRecipesByFilter } from "@/utils/filters.js";
 import { onMounted, ref, watch } from "vue";
 
 const recipes = ref([]);
@@ -76,49 +78,44 @@ const selectedRecipeId = ref(null);
 const showModal = ref(false);
 
 async function loadRecipes() {
-    loading.value = true;
-    error.value = null;
-    try {
-        recipes.value = await fetchRecipes();
-    } catch (err) {
-        console.error(err);
-        error.value = "Failed to load recipes. Please try again later.";
-    } finally {
-        loading.value = false;
-    }
+    const data = await withLoadingAndErrorState(
+        fetchRecipes,
+        loading,
+        error,
+        "Failed to load recipes"
+    );
+    if (data) recipes.value = data;
 }
 
 async function searchRecipesHandler() {
-    loading.value = true;
-    error.value = null;
-    try {
-        if (!searchQuery.value.trim()) {
-            await loadRecipes();
-        } else {
-            recipes.value = await searchRecipes(searchQuery.value);
-        }
-    } catch (err) {
-        console.error(err);
-        error.value = "Something went wrong while searching.";
-    } finally {
-        loading.value = false;
+    const data = await withLoadingAndErrorState(
+        async () => {
+            if (!searchQuery.value.trim()) {
+                return await fetchRecipes();
+            } else {
+                return await searchRecipes(searchQuery.value);
+            }
+        },
+        loading,
+        error,
+        "Something went wrong while searching."
+    );
+
+    if (data) {
+        recipes.value = data;
     }
 }
 
 async function applyFilters(filters) {
-    loading.value = true;
-    error.value = null;
-    try {
-        if (!filters.type && !filters.value) {
-            recipes.value = await fetchRecipes();
-        } else {
-            recipes.value = await fetchFilteredRecipes(filters.type, filters.value);
-        }
-    } catch (err) {
-        console.error(err);
-        error.value = "Failed to fetch recipes.";
-    } finally {
-        loading.value = false;
+    const data = await withLoadingAndErrorState(
+        async () => await fetchRecipesByFilter(filters),
+        loading,
+        error,
+        "Failed to fetch recipes."
+    );
+
+    if (data) {
+        recipes.value = data;
     }
 }
 

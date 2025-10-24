@@ -43,6 +43,7 @@
                 <div v-if="isLoadingFilters" class="text-center text-gray-500 dark:text-gray-400">
                     Loading filters...
                 </div>
+                <div v-if="error" class="text-red-500">{{ error }}</div>
 
                 <div v-else class="w-full">
                     <!-- Filter Type Selection -->
@@ -106,7 +107,7 @@
                     <div v-if="activeFilterType" class="mt-2 flex justify-between w-full">
                         <button
                             @click="clearFilters"
-                            class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-semibold text-sm transition-all shadow-sm enabled:hover:bg-gray-200 enabled:dark:hover:bg-gray-700 enabled:hover:text-pink-600 enabled:dark:hover:text-pink-400 disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-not-allowed"
+                            class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-semibold text-sm transition-all shadow-sm enabled:hover:bg-gray-200 enabled:dark:hover:bg-gray-700 enabled:hover:text-pink-600 enabled:dark:hover:text-pink-400 disabled:bg-gray-400 disabled:dark:bg-gray-400 disabled:text-gray-200 disabled:cursor-not-allowed disabled:hover:bg-gray-400"
                             :disabled="!appliedType || !appliedValue"
                         >
                             Clear
@@ -114,7 +115,7 @@
 
                         <button
                             @click="applyFilters"
-                            class="bg-pink-500 hover:bg-pink-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-not-allowed disabled:hover:bg-gray-400"
+                            class="bg-pink-500 hover:bg-pink-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-not-allowed"
                             :disabled="
                                 !activeOption ||
                                 (appliedType === activeFilterType && appliedValue === activeOption)
@@ -131,6 +132,8 @@
 
 <script setup>
 import { fetchFilterLists } from "@/api/recipes.js";
+import { withLoadingAndErrorState } from "@/utils/apiHelper.js";
+import { getOptionsByType, updateFiltersState } from "@/utils/filters.js";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
 const emit = defineEmits(["apply"]);
@@ -143,6 +146,7 @@ const availableOptions = ref([]);
 const activeOption = ref("");
 
 const isLoadingFilters = ref(true);
+const error = ref(null);
 
 const appliedType = ref(null);
 const appliedValue = ref(null);
@@ -162,16 +166,17 @@ const filtersState = ref({
 onMounted(async () => {
     if (!categories.value.length && !areas.value.length && !ingredients.value.length) {
         isLoadingFilters.value = true;
-        try {
-            const data = await fetchFilterLists();
-            categories.value = data.categories;
-            areas.value = data.areas;
-            ingredients.value = data.ingredients;
-        } catch (err) {
-            console.error("Failed to fetch filter lists:", err);
-        } finally {
-            isLoadingFilters.value = false;
-        }
+        await withLoadingAndErrorState(
+            async () => {
+                const data = await fetchFilterLists();
+                categories.value = data.categories;
+                areas.value = data.areas;
+                ingredients.value = data.ingredients;
+            },
+            isLoadingFilters,
+            error,
+            "Failed to fetch filter lists."
+        );
     } else {
         isLoadingFilters.value = false;
     }
@@ -184,27 +189,17 @@ function toggleDropdown() {
 function selectFilterType(type) {
     activeFilterType.value = type;
     activeOption.value = "";
-    switch (type) {
-        case "Category":
-            availableOptions.value = categories.value;
-            break;
-        case "Area":
-            availableOptions.value = areas.value;
-            break;
-        case "Ingredient":
-            availableOptions.value = ingredients.value;
-            break;
-    }
+    availableOptions.value = getOptionsByType(
+        type,
+        categories.value,
+        areas.value,
+        ingredients.value
+    );
 }
 
 function selectOption(option) {
-    if (activeOption.value === option) {
-        activeOption.value = "";
-        filtersState.value[activeFilterType.value.toLowerCase()] = [];
-    } else {
-        activeOption.value = option;
-        filtersState.value[activeFilterType.value.toLowerCase()] = [option];
-    }
+    const updatedOption = updateFiltersState(filtersState.value, activeFilterType.value, option);
+    activeOption.value = updatedOption || "";
 }
 
 function clearFilters() {

@@ -1,4 +1,5 @@
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api";
+import { buildFilterParams } from "@/utils/filters.js";
 
 export async function fetchRecipes() {
     const res = await fetch(`${BASE_URL}/recipes`);
@@ -24,18 +25,7 @@ export async function fetchFilterLists() {
 export async function fetchFilteredRecipes(filterType, option) {
     if (!filterType || !option) return [];
 
-    let params = {};
-    switch (filterType) {
-        case "Area":
-            params = { a: option };
-            break;
-        case "Category":
-            params = { c: option };
-            break;
-        case "Ingredient":
-            params = { i: option };
-            break;
-    }
+    const params = buildFilterParams(filterType, option);
 
     const queryString = new URLSearchParams(params).toString();
     const res = await fetch(`${BASE_URL}/recipes/filter?${queryString}`);

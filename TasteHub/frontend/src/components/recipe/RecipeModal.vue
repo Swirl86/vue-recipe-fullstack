@@ -122,6 +122,7 @@
 
 <script setup>
 import { fetchRecipeDetail } from "@/api/recipes.js";
+import { withLoadingAndErrorState } from "@/utils/apiHelper.js";
 import { ref, watch } from "vue";
 
 const props = defineProps({
@@ -141,17 +142,16 @@ function close() {
 
 async function loadRecipe() {
     if (!props.recipeId) return;
-    loading.value = true;
-    error.value = null;
 
-    try {
-        const data = await fetchRecipeDetail(props.recipeId);
+    const data = await withLoadingAndErrorState(
+        async () => await fetchRecipeDetail(props.recipeId),
+        loading,
+        error,
+        "Failed to load recipe details."
+    );
+
+    if (data) {
         recipe.value = data;
-    } catch (err) {
-        console.error(err);
-        error.value = "Failed to load recipe details.";
-    } finally {
-        loading.value = false;
     }
 }
 
