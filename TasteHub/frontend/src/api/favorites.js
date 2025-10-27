@@ -40,10 +40,17 @@ export async function addFavorite(recipeData) {
  * @throws Will throw an error if the request fails
  */
 export async function deleteFavorite(id) {
+    console.log("Deleting favorite with ID:", id);
     const res = await fetch(`${BASE_URL}/favorites/${id}`, {
         method: "DELETE",
     });
 
     if (!res.ok) throw new Error(`Failed to delete favorite: ${res.status} ${res.statusText}`);
+    return await res.json();
+}
+
+export async function deleteAllFavorites() {
+    const res = await fetch(`${BASE_URL}/favorites`, { method: "DELETE" });
+    if (!res.ok) throw new Error("Failed to delete all favorites");
     return await res.json();
 }

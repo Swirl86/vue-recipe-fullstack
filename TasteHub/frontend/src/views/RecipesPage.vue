@@ -114,14 +114,14 @@ async function loadFavorites() {
 async function handleFavorite(recipe) {
     error.value = null;
     try {
-        const existing = favorites.value.find((f) => f.recipeId === recipe._id);
+        const existing = favorites.value.find((f) => f.recipeId === recipe.recipeId);
 
         if (existing) {
-            await deleteFavorite(existing._id);
-            favorites.value = favorites.value.filter((f) => f._id !== existing._id);
+            await deleteFavorite(existing.recipeId);
+            favorites.value = favorites.value.filter((f) => f.recipeId !== existing.recipeId);
         } else {
             const newFav = await addFavorite({
-                recipeId: recipe._id,
+                recipeId: recipe.recipeId,
                 name: recipe.name,
                 thumbnail: recipe.thumbnail,
                 category: recipe.category || "",
@@ -165,7 +165,7 @@ async function applyFilters(filters) {
 }
 
 function openRecipe(recipe) {
-    selectedRecipeId.value = recipe._id;
+    selectedRecipeId.value = recipe.recipeId;
     showModal.value = true;
 }
 

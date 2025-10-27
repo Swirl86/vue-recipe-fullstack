@@ -7,6 +7,6 @@
 export function markFavorites(recipes, favorites) {
     return recipes.map((recipe) => ({
         ...recipe,
-        isFavorite: favorites.some((f) => f.recipeId === recipe._id),
+        isFavorite: favorites.some((f) => f.recipeId === recipe.recipeId),
     }));
 }

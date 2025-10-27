@@ -132,6 +132,7 @@
 
 <script setup>
 import { fetchFilterLists } from "@/api/recipes.js";
+import { useFiltersStore } from "@/stores/filters";
 import { withLoadingAndErrorState } from "@/utils/apiHelper.js";
 import { getOptionsByType, updateFiltersState } from "@/utils/filtersHelper.js";
 import { onBeforeUnmount, onMounted, ref } from "vue";
@@ -151,12 +152,8 @@ const error = ref(null);
 const appliedType = ref(null);
 const appliedValue = ref(null);
 
-// Store fetched filters
-const categories = ref([]);
-const areas = ref([]);
-const ingredients = ref([]);
+const filtersStore = useFiltersStore();
 
-// filtersState object (for backend)
 const filtersState = ref({
     categories: [],
     areas: [],
@@ -164,22 +161,25 @@ const filtersState = ref({
 });
 
 onMounted(async () => {
-    if (!categories.value.length && !areas.value.length && !ingredients.value.length) {
+    if (
+        !filtersStore.categories.length ||
+        !filtersStore.areas.length ||
+        !filtersStore.ingredients.length
+    ) {
         isLoadingFilters.value = true;
         await withLoadingAndErrorState(
             async () => {
                 const data = await fetchFilterLists();
-                categories.value = data.categories;
-                areas.value = data.areas;
-                ingredients.value = data.ingredients;
+                filtersStore.setCategories(data.categories);
+                filtersStore.setAreas(data.areas);
+                filtersStore.setIngredients(data.ingredients);
             },
             isLoadingFilters,
             error,
             "Failed to fetch filter lists."
         );
-    } else {
-        isLoadingFilters.value = false;
     }
+    isLoadingFilters.value = false;
 });
 
 function toggleDropdown() {
@@ -191,9 +191,9 @@ function selectFilterType(type) {
     activeOption.value = "";
     availableOptions.value = getOptionsByType(
         type,
-        categories.value,
-        areas.value,
-        ingredients.value
+        filtersStore.categories,
+        filtersStore.areas,
+        filtersStore.ingredients
     );
 }
 

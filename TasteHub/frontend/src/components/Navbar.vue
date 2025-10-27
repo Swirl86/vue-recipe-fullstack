@@ -9,17 +9,21 @@
             🏠 TasteHub
         </router-link>
 
-        <div class="space-x-6 flex items-center">
+        <div class="space-x-4 flex items-center">
             <router-link
                 to="/recipes"
-                class="text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 transition-colors duration-200"
+                class="px-3 py-2 rounded-md text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 transition-colors duration-200"
+                active-class="bg-pink-100 dark:bg-pink-800/40 text-pink-800 dark:text-pink-100 shadow-sm"
+                exact
             >
                 Recipes
             </router-link>
 
             <router-link
                 to="/favorites"
-                class="opacity-50 cursor-not-allowed pointer-events-none text-pink-600 dark:text-pink-400"
+                class="px-3 py-2 rounded-md text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 transition-colors duration-200"
+                active-class="bg-pink-100 dark:bg-pink-800/40 text-pink-800 dark:text-pink-100 shadow-sm"
+                exact
             >
                 Favorites
             </router-link>

@@ -11,7 +11,7 @@ export async function fetchRecipes() {
     const data = await res.json();
 
     return (data.meals || []).map((meal) => ({
-        _id: meal.idMeal,
+        recipeId: meal.idMeal,
         name: meal.strMeal,
         category: meal.strCategory,
         area: meal.strArea,
@@ -46,10 +46,10 @@ export async function fetchFilteredRecipes(filterType, option) {
     if (!res.ok) throw new Error("Failed to fetch filtered recipes");
 
     const data = await res.json();
-    console.log(`Fetched recipes filtered by ${filterType}=${option}:`, data);
+    //console.log(`Fetched recipes filtered by ${filterType}=${option}:`, data);
 
     return (data.meals || []).map((meal) => ({
-        _id: meal.idMeal,
+        recipeId: meal.idMeal,
         name: meal.strMeal,
         thumbnail: meal.strMealThumb,
         category: filterType === "Category" ? option : meal.strCategory || "",
@@ -67,7 +67,7 @@ export async function searchRecipes(query) {
     if (!res.ok) throw new Error("Failed to search recipes");
     const data = await res.json();
     return (data.meals || []).map((meal) => ({
-        _id: meal.idMeal,
+        recipeId: meal.idMeal,
         name: meal.strMeal,
         category: meal.strCategory,
         area: meal.strArea,
@@ -100,7 +100,7 @@ export async function fetchRecipeDetail(id) {
     }
 
     return {
-        _id: meal.idMeal,
+        recipeId: meal.idMeal,
         name: meal.strMeal,
         category: meal.strCategory,
         area: meal.strArea,
