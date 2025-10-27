@@ -16,15 +16,30 @@ app.use(express.json());
 app.use("/api/recipes", recipesRoutes);
 app.use("/api/favorites", favoritesRoutes);
 
-// MongoDB connection
+// MongoDB URI
 const mongoURI =
     process.env.NODE_ENV === "test" ? process.env.MONGO_URI_TEST : process.env.MONGO_URI;
 
+async function dropDatabaseIfNeeded() {
+    if (process.env.DROP_DB === "true") {
+        try {
+            await mongoose.connection.db.dropDatabase();
+            console.log("Database dropped!");
+        } catch (err) {
+            console.error("Failed to drop database:", err);
+        }
+    }
+}
+
+// Start server and connect to MongoDB
 mongoose
     .connect(mongoURI)
-    .then(() => {
+    .then(async () => {
         console.log(`MongoDB connected to ${mongoURI}`);
-        // Start server only if not testing
+
+        // Drop database if needed
+        await dropDatabaseIfNeeded();
+
         if (process.env.NODE_ENV !== "test") {
             const PORT = process.env.PORT || 5000;
             app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
@@ -41,4 +56,4 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
 });
 
-export default app; // for Jest/Supertest
+export default app;

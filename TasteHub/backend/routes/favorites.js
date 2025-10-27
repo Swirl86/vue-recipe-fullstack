@@ -4,12 +4,12 @@ import FavoriteRecipe from "../models/FavoriteRecipe.js";
 const router = express.Router();
 
 // GET all favorites
-router.get("/", async (req, res) => {
+router.get("/", async (_, res) => {
     try {
         const favorites = await FavoriteRecipe.find();
-        res.json(favorites);
+        return res.json(favorites);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: err.message });
     }
 });
 
@@ -18,19 +18,33 @@ router.post("/", async (req, res) => {
     const newFavorite = new FavoriteRecipe(req.body);
     try {
         const saved = await newFavorite.save();
-        res.status(201).json(saved);
+        return res.status(201).json(saved);
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        return res.status(400).json({ message: err.message });
     }
 });
 
-// DELETE favorite
-router.delete("/:id", async (req, res) => {
+// DELETE favorite by ID
+router.delete("/:recipeId", async (req, res) => {
     try {
-        await FavoriteRecipe.findByIdAndDelete(req.params.id);
-        res.json({ message: "Favorite deleted" });
+        const { recipeId } = req.params;
+        const deleted = await FavoriteRecipe.findOneAndDelete({ recipeId });
+        if (!deleted) {
+            return res.status(404).json({ message: "Favorite not found" });
+        }
+        return res.status(200).json({ message: "Favorite deleted" });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: err.message });
+    }
+});
+
+// DELETE all favorites
+router.delete("/", async (req, res) => {
+    try {
+        await FavoriteRecipe.deleteMany({});
+        return res.status(200).json({ message: "All favorites deleted" });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
     }
 });
 

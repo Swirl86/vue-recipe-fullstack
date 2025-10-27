@@ -8,7 +8,7 @@ const router = express.Router();
 const API_BASE = "https://www.themealdb.com/api/json/v1/1";
 
 // GET all filters: categories, areas, ingredients
-router.get("/filters", async (req, res) => {
+router.get("/filters", async (_, res) => {
     try {
         let categories = await Category.find();
         let areas = await Area.find();
