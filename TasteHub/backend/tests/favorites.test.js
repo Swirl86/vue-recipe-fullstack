@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import request from "supertest";
 import FavoriteRecipe from "../models/FavoriteRecipe.js";
-import app from "../server.js";
+import { app } from "../server.js";
 
 describe("Favorites API", () => {
     // Connect to the test database before running tests

@@ -16,7 +16,6 @@ app.use(express.json());
 app.use("/api/recipes", recipesRoutes);
 app.use("/api/favorites", favoritesRoutes);
 
-// MongoDB URI
 const mongoURI =
     process.env.NODE_ENV === "test" ? process.env.MONGO_URI_TEST : process.env.MONGO_URI;
 
@@ -31,13 +30,10 @@ async function dropDatabaseIfNeeded() {
     }
 }
 
-// Start server and connect to MongoDB
 mongoose
     .connect(mongoURI)
     .then(async () => {
         console.log(`MongoDB connected to ${mongoURI}`);
-
-        // Drop database if needed
         await dropDatabaseIfNeeded();
 
         if (process.env.NODE_ENV !== "test") {
@@ -50,10 +46,9 @@ mongoose
 // 404 middleware
 app.use((req, res) => res.status(404).json({ message: "Route not found" }));
 
-// Error-handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ message: "Internal server error" });
 });
 
-export default app;
+export { app, mongoose };

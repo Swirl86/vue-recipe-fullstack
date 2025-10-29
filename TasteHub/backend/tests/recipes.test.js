@@ -1,5 +1,5 @@
 import request from "supertest";
-import app from "../server.js";
+import { app } from "../server.js";
 
 describe("Recipes API", () => {
     it("should return a list of recipes for a search query", async () => {
