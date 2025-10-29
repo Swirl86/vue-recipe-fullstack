@@ -71,8 +71,9 @@ jobs:
             # Step 4: Set environment variables for backend
             - name: Set Backend Environment
               run: |
-                  echo "MONGO_URI=mongodb://localhost:27017/recipe-app-test" >> $GITHUB_ENV
-                  echo "PORT=5000" >> $GITHUB_ENV
+                  echo "MONGO_URI=${{ secrets.MONGO_URI_TEST }}" >> $GITHUB_ENV
+                  echo "MONGO_URI_TEST=${{ secrets.MONGO_URI_TEST }}" >> $GITHUB_ENV
+                  echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
 
             # Step 5: Wait for MongoDB to be ready
             - name: Wait for MongoDB
