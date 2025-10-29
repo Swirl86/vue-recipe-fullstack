@@ -28,16 +28,20 @@ The main purpose of this project is to **learn and improve my fullstack developm
   - Fetches **Categories**, **Areas**, and **Ingredients** filtering options from backend
   - **Apply Filters**: fetches recipes based on the selected filter options and updates the recipe grid dynamically
   - **Clear Filters**: resets all filters to empty, fetching and displaying the original full recipe list
-  - *Multi-ingredient filter not supported in this project (Premium API Only)  
+  - *Multi-ingredient filter not supported in this project (Premium API Only)
+- Favorite recipes
+  - Save, remove and display favorite recipes 
 - Basic backend setup: models, routes, server, and database connection
 - Backend tests using Jest & Supertest to verify recipes and favorites functionality
+- Frontend tests using Vitest & Testing Library
+  - Includes basic rendering tests for components and views
+- CI/CD with GitHub Actions
+  - Automatically runs backend and frontend tests on each push or pull request
 
 **Planned / Future Enhancements:**
 - Add custom recipes stored in the local database
-- Save favorite recipes
-- Retrieve and delete favorites via API
 - Improved responsive layout and animations
-- Pagination / infinite scroll for large recipe lists
+- Ingredients page – a dedicated view where users can browse and read about available ingredients
 - User authentication & profiles
 - Recipe ratings & reviews
 - Improved accessibility (ARIA roles, keyboard navigation, contrast)
@@ -52,10 +56,11 @@ The main purpose of this project is to **learn and improve my fullstack developm
 
 ## 🧪 Testing
 
+### Backend
 Backend tests are implemented using Jest and Supertest.
 
 **Tests cover:**
-- Searching recipes (recipes.test.js)
+- Searching recipes (`recipes.test.js`)
 - Fetching recipe details by ID
 - Handling unknown search queries
 - CRUD operations for favorites (favorites.test.js)
@@ -64,4 +69,18 @@ Backend tests are implemented using Jest and Supertest.
 Tests run against a separate test database (recipe-app-test) to avoid affecting production data.
 
 **Run tests with:**
+```npm run test```
+
+---
+
+### Frontend
+Frontend tests are implemented using Vitest and Testing Library (React Testing Library).
+
+**Tests cover:**
+- Navbar – ensures navigation links render and respond correctly
+- ThemeToggle – verifies that dark/light mode toggling works as expected
+
+Tests ensure that core UI components render correctly and that key interactive behaviors (like theme switching) function as intended.
+
+Run frontend tests with:
 ```npm run test```
