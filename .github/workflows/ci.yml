@@ -1,0 +1,80 @@
+name: CI
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:
+    frontend:
+        name: Frontend Tests
+        runs-on: ubuntu-latest
+
+        steps:
+            # Step 1: Checkout the repository
+            - name: Checkout repo
+              uses: actions/checkout@v3
+
+            # Step 2: Setup Node.js
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "20"
+
+            # Step 3: Set environment variable for backend URL
+            - name: Set Frontend Environment
+              run: echo "VITE_BACKEND_URL=${{ secrets.VITE_BACKEND_URL }}" >> $GITHUB_ENV
+
+            # Step 4: Install frontend dependencies
+            - name: Install Frontend Dependencies
+              run: npm install
+              working-directory: ./TasteHub/frontend
+
+            # Step 5: Run Vitest frontend tests
+            - name: Run Frontend Tests
+              run: npm run test
+              working-directory: ./TasteHub/frontend
+
+    backend:
+        name: Backend Tests
+        runs-on: ubuntu-latest
+
+        # Step 0: Start MongoDB service for backend tests
+        services:
+            mongo:
+                image: mongo:6
+                ports:
+                    - 27017:27017
+                options: >-
+                    --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+
+        steps:
+            # Step 1: Checkout the repository
+            - name: Checkout repo
+              uses: actions/checkout@v3
+
+            # Step 2: Setup Node.js
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "20"
+
+            # Step 3: Install backend dependencies
+            - name: Install Backend Dependencies
+              run: npm install
+              working-directory: ./TasteHub/backend
+
+            # Step 4: Set environment variables for backend
+            - name: Set Backend Environment
+              run: |
+                  echo "MONGO_URI=${{ secrets.MONGO_URI_TEST }}" >> $GITHUB_ENV
+                  echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
+
+            # Step 5: Run Jest backend tests
+            - name: Run Backend Tests
+              run: npm run test
+              working-directory: ./TasteHub/backend
