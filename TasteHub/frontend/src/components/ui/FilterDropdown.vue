@@ -132,7 +132,7 @@
 
 <script setup>
 import { fetchFilterLists } from "@/api/recipes.js";
-import { useFiltersStore } from "@/stores/filters";
+import { useFiltersStore } from "@/stores/filtersStore.js";
 import { withLoadingAndErrorState } from "@/utils/apiHelper.js";
 import { getOptionsByType, updateFiltersState } from "@/utils/filtersHelper.js";
 import { onBeforeUnmount, onMounted, ref } from "vue";

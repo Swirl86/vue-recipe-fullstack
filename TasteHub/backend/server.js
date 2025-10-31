@@ -4,6 +4,7 @@ import express from "express";
 import mongoose from "mongoose";
 
 import favoritesRoutes from "./routes/favorites.js";
+import ingredientsRoutes from "./routes/ingredients.js";
 import recipesRoutes from "./routes/recipes.js";
 
 dotenv.config();
@@ -15,6 +16,7 @@ app.use(express.json());
 // Routes
 app.use("/api/recipes", recipesRoutes);
 app.use("/api/favorites", favoritesRoutes);
+app.use("/api/ingredients", ingredientsRoutes);
 
 const mongoURI =
     process.env.NODE_ENV === "test" ? process.env.MONGO_URI_TEST : process.env.MONGO_URI;

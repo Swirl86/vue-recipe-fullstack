@@ -28,6 +28,15 @@
                 Favorites
             </router-link>
 
+            <router-link
+                to="/ingredients"
+                class="px-3 py-2 rounded-md text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 transition-colors duration-200"
+                active-class="bg-pink-100 dark:bg-pink-800/40 text-pink-800 dark:text-pink-100 shadow-sm"
+                exact
+            >
+                Ingredients
+            </router-link>
+
             <ThemeToggle />
         </div>
     </nav>
