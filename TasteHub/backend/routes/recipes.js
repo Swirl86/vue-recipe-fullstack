@@ -64,7 +64,6 @@ router.get("/filters", async (_, res) => {
             ingredients: ingredients.map((a) => a.name),
         });
     } catch (err) {
-        console.error("🔥 Error fetching filters:", err.message);
         res.status(500).json({ message: "Failed to fetch filters" });
     }
 });

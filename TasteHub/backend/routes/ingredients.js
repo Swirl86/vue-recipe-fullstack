@@ -47,7 +47,6 @@ router.get("/", async (_, res) => {
             })),
         });
     } catch (err) {
-        console.error("🔥 Error fetching ingredients:", err.message);
         res.status(500).json({ message: "Failed to fetch ingredients" });
     }
 });
