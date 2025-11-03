@@ -7,12 +7,7 @@
         <div
             class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md sm:max-w-3xl max-h-[80vh] overflow-y-auto p-6 relative"
         >
-            <button
-                @click="$emit('close')"
-                class="absolute top-4 right-4 md:right-6 w-10 h-10 flex items-center justify-center rounded-full bg-gray-200/70 dark:bg-gray-700/70 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-110 transition-transform duration-200 z-50 backdrop-blur-sm shadow-md"
-            >
-                ✖
-            </button>
+            <CloseButton @click="$emit('close')" position="top-4 right-8 md:right-10" />
 
             <div class="flex flex-col md:flex-row gap-6">
                 <div class="flex flex-col md:w-1/3 gap-4 pt-2 md:pt-4">
@@ -43,6 +38,8 @@
 </template>
 
 <script setup>
+import CloseButton from "@/components/ui/CloseButton.vue";
+
 defineProps({
     ingredient: Object,
     visible: Boolean,

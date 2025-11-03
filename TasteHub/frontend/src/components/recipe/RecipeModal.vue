@@ -7,13 +7,7 @@
         <div
             class="bg-[#fefbea] dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-[90rem] mx-auto h-[88vh] flex flex-col relative overflow-y-auto p-6"
         >
-            <!-- Close button -->
-            <button
-                @click="close"
-                class="absolute top-4 right-8 md:right-10 w-10 h-10 flex items-center justify-center rounded-full bg-gray-200/70 dark:bg-gray-700/70 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-110 transition-transform duration-200 z-50 backdrop-blur-sm shadow-md"
-            >
-                ✖
-            </button>
+            <CloseButton @click="$emit('close')" position="top-4 right-8 md:right-10" />
 
             <!-- Scrollable content wrapper -->
             <div class="relative overflow-y-auto flex-1 p-4">
@@ -122,6 +116,7 @@
 
 <script setup>
 import { fetchRecipeDetail } from "@/api/recipes.js";
+import CloseButton from "@/components/ui/CloseButton.vue";
 import { withLoadingAndErrorState } from "@/utils/apiHelper.js";
 import { ref, watch } from "vue";
 

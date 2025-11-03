@@ -4,23 +4,10 @@
         @click="emit('select', recipe)"
     >
         <button
-            @click.stop="emit('delete', recipe)"
+            @click.stop="$emit('click')"
             class="absolute top-3 right-3 p-2 rounded-full bg-red-500/90 dark:bg-red-700/80 backdrop-blur-sm shadow-md hover:scale-110 transition-transform duration-200"
         >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                class="w-6 h-6 text-white"
-            >
-                <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"
-                />
-            </svg>
+            <TrashIcon class="w-6 h-6 text-white" />
         </button>
 
         <div class="w-full max-w-xs sm:max-w-sm md:max-w-md aspect-[4/3] mx-auto">
@@ -45,6 +32,7 @@
 </template>
 
 <script setup>
+import { TrashIcon } from "@heroicons/vue/24/outline";
 const props = defineProps({
     recipe: Object,
 });
