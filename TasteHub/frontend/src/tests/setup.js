@@ -1,9 +1,13 @@
+import "@testing-library/jest-dom";
+import { config } from "@vue/test-utils";
 import { vi } from "vitest";
 
-// Mock RouterLink
-vi.mock("vue-router", () => ({
-    RouterLink: ({ children }) => children,
-}));
+// Global stub for router-link
+config.global.stubs = {
+    "router-link": {
+        template: "<a><slot /></a>",
+    },
+};
 
 // Mock localStorage
 if (typeof global.localStorage === "undefined") {

@@ -2,15 +2,21 @@ import { render, screen } from "@testing-library/vue";
 import Navbar from "../Navbar.vue";
 
 describe("Navbar", () => {
-    it("renders all links correctly", () => {
+    it("renders the logo", () => {
         render(Navbar);
-        expect(screen.getByText("🏠 TasteHub")).toBeTruthy();
-        expect(screen.getByText("Recipes")).toBeTruthy();
-        expect(screen.getByText("Favorites")).toBeTruthy();
+        expect(screen.getByText("🏠 TasteHub")).toBeInTheDocument();
     });
 
-    it("renders ThemeToggle component", () => {
+    it("renders all desktop links", () => {
         render(Navbar);
-        expect(screen.getByRole("button")).toBeTruthy();
+        expect(screen.getByText("Recipes")).toBeInTheDocument();
+        expect(screen.getByText("Favorites")).toBeInTheDocument();
+        expect(screen.getByText("Ingredients")).toBeInTheDocument();
+    });
+
+    it("renders ThemeToggle button", () => {
+        render(Navbar);
+        const themeButton = screen.getByTitle("Switch to dark mode");
+        expect(themeButton).toBeInTheDocument();
     });
 });
