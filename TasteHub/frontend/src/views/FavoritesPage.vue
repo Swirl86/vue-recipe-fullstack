@@ -1,61 +1,61 @@
 <template>
     <Layout>
-        <!-- Bakgrund -->
+        <!-- Background -->
         <div class="absolute inset-0 z-0">
             <div
-                class="absolute inset-0 bg-gradient-to-br from-pink-50 via-yellow-50 to-pink-100 dark:from-pink-900 dark:via-red-800 dark:to-yellow-900"
+                class="absolute inset-0 bg-gradient-to-br from-blue-50 via-teal-50 to-cyan-50 dark:from-blue-900 dark:via-teal-800 dark:to-cyan-950"
             ></div>
-
             <div
                 class="absolute inset-0 bg-[url('/assets/pattern.svg')] opacity-10 bg-repeat dark:opacity-5"
             ></div>
+            <div
+                class="absolute bottom-0 right-1/3 w-[350px] h-[350px] blur-[70px] rounded-full bg-transparent dark:bg-blue-700/20"
+            ></div>
         </div>
 
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-            <h1
-                class="text-5xl font-extrabold mb-12 text-center drop-shadow-md dark:drop-shadow-lg text-gray-900 dark:text-white"
-            >
-                Favorites ❤️
-            </h1>
+        <!-- Content -->
+        <div class="z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="flex flex-col items-center mb-12 space-y-4">
+                <h1
+                    class="text-5xl font-extrabold text-center drop-shadow-md dark:drop-shadow-lg text-gray-900 dark:text-white"
+                >
+                    Favorites ❤️
+                </h1>
 
-            <!-- Error -->
+                <div v-if="favorites.length" class="flex justify-center">
+                    <button
+                        @click="clearFavorites"
+                        class="px-5 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition font-semibold"
+                    >
+                        Delete All Favorites
+                    </button>
+                </div>
+            </div>
+
             <div v-if="error" class="mb-6 text-center text-red-500 font-semibold">
                 {{ error }}
             </div>
 
-            <!-- Delete All Button -->
-            <div v-if="favorites.length" class="mb-6 text-center">
-                <button
-                    @click="clearFavorites"
-                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-                >
-                    Delete All Favorites
-                </button>
-            </div>
-
-            <!-- Loading State -->
-            <div v-if="loading" class="flex justify-center py-20">
+            <div v-if="loading" class="flex justify-center py-12">
                 <div
                     class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-red-500"
                 ></div>
             </div>
 
-            <!-- Empty State -->
             <div
                 v-else-if="favorites.length === 0"
-                class="flex flex-col items-center justify-center py-20"
+                class="flex flex-col items-center justify-center py-12"
             >
                 <img
                     src="/assets/no_favorites.png"
                     alt="No favorites"
                     class="w-48 h-48 mb-6 opacity-50"
                 />
-                <p class="text-gray-500 dark:text-gray-400 text-lg">
+                <p class="text-gray-500 dark:text-gray-400 text-lg text-center">
                     You haven’t added any favorites yet.
                 </p>
             </div>
 
-            <!-- Favorites Grid -->
             <div v-else class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 <FavoriteCard
                     v-for="recipe in favorites"

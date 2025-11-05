@@ -1,18 +1,20 @@
 <template>
     <Layout>
-        <!-- Bakgrund -->
+        <!-- Background -->
         <div class="absolute inset-0 z-0">
             <div
-                class="absolute inset-0 bg-gradient-to-br from-pink-50 via-yellow-50 to-pink-100 dark:from-pink-900 dark:via-red-800 dark:to-yellow-900"
+                class="absolute inset-0 bg-gradient-to-br from-orange-50 via-pink-50 to-yellow-50 dark:from-orange-900 dark:via-pink-800 dark:to-yellow-900"
             ></div>
-
             <div
                 class="absolute inset-0 bg-[url('/assets/pattern.svg')] opacity-10 bg-repeat dark:opacity-5"
+            ></div>
+            <div
+                class="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[400px] blur-[60px] rounded-full bg-transparent dark:bg-pink-700/20"
             ></div>
         </div>
 
         <!-- Content -->
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
             <!-- Title -->
             <h1
                 class="text-5xl font-extrabold mb-12 text-center drop-shadow-md dark:drop-shadow-lg text-gray-900 dark:text-white flex items-center justify-center gap-4"

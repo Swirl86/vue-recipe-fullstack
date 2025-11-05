@@ -1,5 +1,6 @@
 <template>
     <Layout>
+        <!-- Background -->
         <div class="absolute inset-0 z-0">
             <div
                 class="absolute inset-0 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 dark:from-green-900 dark:via-yellow-800 dark:to-green-950"
@@ -8,7 +9,9 @@
                 class="absolute inset-0 bg-[url('/assets/pattern.svg')] opacity-10 bg-repeat dark:opacity-5"
             ></div>
         </div>
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+
+        <!-- Content -->
+        <div class="z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
             <h1 class="text-5xl font-extrabold mb-12 text-center text-gray-900 dark:text-white">
                 Ingredients 🌿
             </h1>

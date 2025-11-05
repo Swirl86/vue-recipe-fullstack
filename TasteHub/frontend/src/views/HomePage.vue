@@ -20,7 +20,7 @@
 
         <!-- Main content -->
         <h1
-            class="text-6xl sm:text-7xl md:text-8xl font-extrabold mb-4 drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)] tracking-tight dark:drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)] z-10"
+            class="text-6xl sm:text-7xl md:text-8xl font-extrabold mb-4 drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)] tracking-tight dark:drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)] z-10 py-20"
         >
             TasteHub
         </h1>
