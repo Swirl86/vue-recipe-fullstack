@@ -30,7 +30,8 @@ The main purpose of this project is to **learn and improve my fullstack developm
   - **Clear Filters**: resets all filters to empty, fetching and displaying the original full recipe list
   - *Multi-ingredient filter not supported in this project (Premium API Only)
 - Favorite recipes
-  - Save, remove and display favorite recipes 
+  - Save, remove and display favorite recipes
+- Ingredients page – a dedicated view where users can browse and read about available ingredients
 - Basic backend setup: models, routes, server, and database connection
 - Backend tests using Jest & Supertest to verify recipes and favorites functionality
 - Frontend tests using Vitest & Testing Library
@@ -40,8 +41,6 @@ The main purpose of this project is to **learn and improve my fullstack developm
 
 **Planned / Future Enhancements:**
 - Add custom recipes stored in the local database
-- Improved responsive layout and animations
-- Ingredients page – a dedicated view where users can browse and read about available ingredients
 - User authentication & profiles
 - Recipe ratings & reviews
 - Improved accessibility (ARIA roles, keyboard navigation, contrast)
@@ -49,9 +48,11 @@ The main purpose of this project is to **learn and improve my fullstack developm
 - Export / print recipes as PDF
 - Animations & microinteractions (hover effects, dropdowns, drag-and-drop)
 - Recipe sharing (copy link, social media, email)
-- More tests
 
-
+**Continuously Improved Over Time**
+- Enhanced responsive layouts and smooth animations
+- Expanded test coverage and improved reliability
+  
 ---
 
 ## 🧪 Testing
