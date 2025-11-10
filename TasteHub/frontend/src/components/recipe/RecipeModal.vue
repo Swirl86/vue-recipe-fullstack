@@ -130,7 +130,7 @@ import { fetchRecipeDetail } from "@/api/recipes.js";
 import CloseButton from "@/components/ui/CloseButton.vue";
 import ExportModal from "@/components/ui/ExportModal.vue";
 import { withLoadingAndErrorState } from "@/utils/apiHelper.js";
-import { exportElement } from "@/utils/exportHelper.js";
+import { exportRecipe } from "@/utils/exportHelper.js";
 import { ref, watch } from "vue";
 
 const props = defineProps({ visible: Boolean, recipeId: String });
@@ -159,9 +159,9 @@ async function loadRecipe() {
 }
 
 const handleExport = async (format) => {
-    if (!exportContainer.value) return;
+    if (!recipe.value) return;
     const darkMode = document.documentElement.classList.contains("dark");
-    await exportElement(exportContainer.value, format, recipe.value?.name, darkMode);
+    await exportRecipe(recipe.value, format, darkMode);
     showExportModal.value = false;
 };
 
