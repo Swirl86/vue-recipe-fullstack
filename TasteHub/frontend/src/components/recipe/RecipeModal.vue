@@ -19,117 +19,128 @@
                     {{ error }}
                 </div>
 
-                <!-- Top Content -->
-                <div v-else class="flex flex-col items-center md:flex-row gap-6">
-                    <!-- Image -->
-                    <div class="w-full md:w-1/5 rounded-3xl overflow-hidden flex-shrink-0 max-h-96">
-                        <img
-                            :src="recipe?.thumbnail || '/assets/no_img.png'"
-                            :alt="recipe?.name"
-                            class="w-full h-full object-cover"
-                        />
-                    </div>
-
-                    <div class="w-full md:w-2/3 flex flex-col items-center gap-4 text-center">
-                        <!-- Title -->
-                        <h2
-                            class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white text-center"
+                <div v-else ref="exportContainer" class="export-container">
+                    <!-- Top Content -->
+                    <div class="flex flex-col items-center md:flex-row gap-6">
+                        <!-- Image -->
+                        <div
+                            class="w-full md:w-1/5 rounded-3xl overflow-hidden flex-shrink-0 max-h-96"
                         >
-                            {{ recipe?.name }}
-                        </h2>
-                        <!-- Category & Area -->
-                        <div class="flex flex-wrap justify-center gap-2 pt-2">
-                            <span
-                                class="px-3 py-1 bg-pink-100 dark:bg-pink-700 text-pink-800 dark:text-pink-200 font-semibold rounded-full text-sm"
-                            >
-                                {{ recipe?.category }}
-                            </span>
-                            <span
-                                class="px-3 py-1 bg-yellow-100 dark:bg-yellow-700 text-yellow-800 dark:text-yellow-200 font-semibold rounded-full text-sm"
-                            >
-                                {{ recipe?.area }}
-                            </span>
+                            <img
+                                :src="recipe?.thumbnail || '/assets/no_img.png'"
+                                :alt="recipe?.name"
+                                class="w-full h-full object-cover"
+                            />
                         </div>
-                        <!-- Tags -->
-                        <div class="flex flex-wrap justify-center gap-2">
-                            <span
-                                v-for="(tag, index) in recipe?.tags"
-                                :key="index"
-                                class="px-3 py-1 bg-purple-100 dark:bg-purple-700 text-purple-800 dark:text-purple-200 font-semibold rounded-full text-sm"
+
+                        <!-- Info -->
+                        <div class="w-full md:w-2/3 flex flex-col items-center gap-4 text-center">
+                            <h2
+                                class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white text-center"
                             >
-                                {{ tag }}
-                            </span>
-                        </div>
-                        <!-- YouTube Link -->
-                        <div v-if="recipe?.youtube">
-                            <a
-                                :href="recipe?.youtube"
-                                target="_blank"
-                                class="text-pink-600 dark:text-pink-400 hover:underline font-medium"
-                            >
-                                ▶ Watch on YouTube
-                            </a>
+                                {{ recipe?.name }}
+                            </h2>
+                            <div class="flex flex-wrap justify-center gap-2 pt-2">
+                                <span
+                                    class="px-3 py-1 bg-pink-100 dark:bg-pink-700 text-pink-800 dark:text-pink-200 font-semibold rounded-full text-sm"
+                                    >{{ recipe?.category }}</span
+                                >
+                                <span
+                                    class="px-3 py-1 bg-yellow-100 dark:bg-yellow-700 text-yellow-800 dark:text-yellow-200 font-semibold rounded-full text-sm"
+                                    >{{ recipe?.area }}</span
+                                >
+                            </div>
+                            <div class="flex flex-wrap justify-center gap-2">
+                                <span
+                                    v-for="(tag, index) in recipe?.tags"
+                                    :key="index"
+                                    class="px-3 py-1 bg-purple-100 dark:bg-purple-700 text-purple-800 dark:text-purple-200 font-semibold rounded-full text-sm"
+                                    >{{ tag }}</span
+                                >
+                            </div>
+                            <div v-if="recipe?.youtube">
+                                <a
+                                    :href="recipe?.youtube"
+                                    target="_blank"
+                                    class="text-pink-600 dark:text-pink-400 hover:underline font-medium"
+                                    >▶ Watch on YouTube</a
+                                >
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Bottom Content -->
-                <div class="flex flex-col md:flex-row gap-6 mt-6">
-                    <!-- Ingredients -->
-                    <div class="w-full md:w-auto min-w-[12rem] pl-6 pr-6 mb-4 md:mb-0">
-                        <h3
-                            class="text-2xl font-semibold text-left text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b-4 border-gray-300 dark:border-gray-700"
-                        >
-                            🧂 Ingredients
-                        </h3>
-                        <ul
-                            class="list-disc text-gray-700 dark:text-gray-300 space-y-1 ml-4 text-left w-auto max-w-full"
-                        >
-                            <li
-                                v-for="(ing, index) in recipe?.ingredients"
-                                :key="ing"
-                                class="break-words py-1 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+                    <!-- Bottom Content -->
+                    <div class="flex flex-col md:flex-row gap-6 mt-6">
+                        <!-- Ingredients -->
+                        <div class="w-full md:w-auto min-w-[12rem] pl-6 pr-6 mb-4 md:mb-0">
+                            <h3
+                                class="text-2xl font-semibold text-left text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b-4 border-gray-300 dark:border-gray-700"
                             >
-                                {{ recipe?.measures[index] }} {{ ing }}
-                            </li>
-                        </ul>
-                    </div>
+                                🧂 Ingredients
+                            </h3>
+                            <ul
+                                class="list-disc text-gray-700 dark:text-gray-300 space-y-1 ml-4 text-left w-auto max-w-full"
+                            >
+                                <li
+                                    v-for="(ing, index) in recipe?.ingredients"
+                                    :key="ing"
+                                    class="break-words py-1 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+                                >
+                                    {{ recipe?.measures[index] }} {{ ing }}
+                                </li>
+                            </ul>
+                        </div>
 
-                    <!-- Instructions -->
-                    <div class="w-full flex-1 pl-6">
-                        <h3
-                            class="text-2xl font-semibold text-left text-gray-900 dark:text-gray-100 mb-4 border-b-4 border-gray-300 dark:border-gray-700 pb-2"
-                        >
-                            🍳 Instructions
-                        </h3>
-                        <p
-                            class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line text-left"
-                        >
-                            {{ recipe?.instructions }}
-                        </p>
+                        <!-- Instructions + Export -->
+                        <div class="w-full flex-1 pl-6">
+                            <div
+                                class="flex justify-between items-center mb-4 border-b-4 border-gray-300 dark:border-gray-700 pb-2"
+                            >
+                                <h3 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                                    🍳 Instructions
+                                </h3>
+                                <button
+                                    @click="showExportModal = true"
+                                    class="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors text-sm"
+                                >
+                                    🖨 Export / Print
+                                </button>
+                            </div>
+                            <p
+                                class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line text-left"
+                            >
+                                {{ recipe?.instructions }}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <ExportModal
+            :visible="showExportModal"
+            @close="showExportModal = false"
+            @export="handleExport"
+        />
     </div>
 </template>
 
 <script setup>
 import { fetchRecipeDetail } from "@/api/recipes.js";
 import CloseButton from "@/components/ui/CloseButton.vue";
+import ExportModal from "@/components/ui/ExportModal.vue";
 import { withLoadingAndErrorState } from "@/utils/apiHelper.js";
+import { exportElement } from "@/utils/exportHelper.js";
 import { ref, watch } from "vue";
 
-const props = defineProps({
-    visible: Boolean,
-    recipeId: String,
-});
-
+const props = defineProps({ visible: Boolean, recipeId: String });
 const emit = defineEmits(["close"]);
 
 const recipe = ref(null);
 const loading = ref(false);
 const error = ref(null);
+const showExportModal = ref(false);
+const exportContainer = ref(null);
 
 function close() {
     emit("close");
@@ -144,11 +155,15 @@ async function loadRecipe() {
         error,
         "Failed to load recipe details."
     );
-
-    if (data) {
-        recipe.value = data;
-    }
+    if (data) recipe.value = data;
 }
+
+const handleExport = async (format) => {
+    if (!exportContainer.value) return;
+    const darkMode = document.documentElement.classList.contains("dark");
+    await exportElement(exportContainer.value, format, recipe.value?.name, darkMode);
+    showExportModal.value = false;
+};
 
 // Fetch recipe details when recipeId changes
 watch(() => props.recipeId, loadRecipe, { immediate: true });
