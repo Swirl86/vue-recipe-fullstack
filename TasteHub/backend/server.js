@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import favoritesRoutes from "./routes/favorites.js";
 import ingredientsRoutes from "./routes/ingredients.js";
 import recipesRoutes from "./routes/recipes.js";
-import reviewRatingsRoutes from "./routes/reviewRarings.js";
+import reviewRatingsRoutes from "./routes/reviewRatings.js";
 
 dotenv.config();
 
