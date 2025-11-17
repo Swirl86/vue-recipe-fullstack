@@ -26,7 +26,7 @@
                     <div v-else ref="exportContainer" class="export-container">
                         <!-- Top Content -->
                         <div class="flex flex-col items-center md:flex-row gap-6">
-                            <!-- Image -->
+                            <!-- Image (Left side) -->
                             <div class="w-full md:w-1/4 rounded-3xl overflow-hidden flex-shrink-0">
                                 <img
                                     :src="recipe?.thumbnail || '/assets/no_img.png'"
@@ -35,7 +35,7 @@
                                 />
                             </div>
 
-                            <!-- Info -->
+                            <!-- Info (Middle) -->
                             <div
                                 class="w-full md:w-2/3 flex flex-col items-center gap-4 text-center"
                             >
@@ -71,6 +71,12 @@
                                     >
                                 </div>
                             </div>
+
+                            <!-- Average Rating (Right side) -->
+                            <AverageRatingStars
+                                v-if="averageRating > 0"
+                                :avgRating="averageRating"
+                            />
                         </div>
 
                         <!-- Bottom Content -->
@@ -126,7 +132,12 @@
                 <div
                     class="w-full md:w-1/3 mt-6 bg-white/60 dark:bg-gray-900/40 rounded-2xl p-4 border-t md:border-t-0 md:border-l border-gray-300 dark:border-gray-700 flex flex-col"
                 >
-                    <ReviewSection v-if="recipe" :recipeId="recipe.recipeId" class="flex-1" />
+                    <ReviewSection
+                        v-if="recipe"
+                        :recipeId="recipe.recipeId"
+                        @update:avgRating="averageRating = $event"
+                        class="flex-1"
+                    />
                 </div>
             </div>
 
@@ -141,6 +152,7 @@
 
 <script setup>
 import { fetchRecipeDetail } from "@/api/recipes.js";
+import AverageRatingStars from "@/components/reviews/AverageRatingStars.vue";
 import ReviewSection from "@/components/reviews/ReviewSection.vue";
 import CloseButton from "@/components/ui/CloseButton.vue";
 import ExportModal from "@/components/ui/ExportModal.vue";
@@ -156,6 +168,7 @@ const loading = ref(false);
 const error = ref(null);
 const showExportModal = ref(false);
 const exportContainer = ref(null);
+const averageRating = ref(0);
 
 function close() {
     emit("close");

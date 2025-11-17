@@ -119,8 +119,10 @@
 
 <script setup>
 import { fetchReviews, postReview } from "@/api/reviews.js";
+import { calculateAverageRating } from "@/utils/reviewRatingHelper.js";
 import { onMounted, ref, watch } from "vue";
 
+const emit = defineEmits(["update:avgRating"]);
 const props = defineProps({ recipeId: String });
 const reviews = ref([]);
 const newRating = ref(0);
@@ -130,6 +132,9 @@ const loading = ref(false);
 async function loadReviews() {
     if (!props.recipeId) return;
     reviews.value = await fetchReviews(props.recipeId);
+
+    const avg = calculateAverageRating(reviews.value);
+    emit("update:avgRating", avg);
 }
 
 async function submitReview() {
