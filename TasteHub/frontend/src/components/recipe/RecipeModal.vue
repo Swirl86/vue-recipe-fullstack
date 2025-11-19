@@ -9,129 +9,186 @@
         >
             <CloseButton @click="$emit('close')" position="top-4 right-8 md:right-10" />
 
-            <!-- Scrollable content wrapper -->
-            <div class="relative overflow-y-auto flex-1 p-4">
-                <!-- Loading & error -->
-                <div v-if="loading" class="text-center text-gray-500 dark:text-gray-400 mt-4">
-                    Loading recipe details...
-                </div>
-                <div v-else-if="error" class="text-center text-red-500 mt-4">
-                    {{ error }}
-                </div>
+            <!-- Main content area -->
+            <div
+                class="flex flex-col md:flex-row flex-1 overflow-y-auto md:overflow-hidden p-4 gap-4"
+            >
+                <!-- Left side: Recipe details -->
+                <div class="flex-1 md:w-2/3 bg-transparent md:overflow-y-auto p-4 rounded-2xl">
+                    <!-- Loading & error -->
+                    <div v-if="loading" class="text-center text-gray-500 dark:text-gray-400 mt-4">
+                        Loading recipe details...
+                    </div>
+                    <div v-else-if="error" class="text-center text-red-500 mt-4">
+                        {{ error }}
+                    </div>
 
-                <div v-else ref="exportContainer" class="export-container">
-                    <!-- Top Content -->
-                    <div class="flex flex-col items-center md:flex-row gap-6">
-                        <!-- Image -->
-                        <div
-                            class="w-full md:w-1/5 rounded-3xl overflow-hidden flex-shrink-0 max-h-96"
-                        >
-                            <img
-                                :src="recipe?.thumbnail || '/assets/no_img.png'"
-                                :alt="recipe?.name"
-                                class="w-full h-full object-cover"
+                    <div v-else ref="exportContainer" class="export-container">
+                        <!-- Top Content -->
+                        <div class="flex flex-col items-center md:flex-row gap-6">
+                            <!-- Image (Left side) -->
+                            <div class="w-full md:w-1/4 rounded-3xl overflow-hidden flex-shrink-0">
+                                <img
+                                    :src="recipe?.thumbnail || '/assets/no_img.png'"
+                                    :alt="recipe?.name"
+                                    class="w-full h-auto object-cover"
+                                />
+                            </div>
+
+                            <!-- Info (Middle) -->
+                            <div
+                                class="w-full md:w-2/3 flex flex-col items-center gap-4 text-center"
+                            >
+                                <h2
+                                    class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white text-center"
+                                >
+                                    {{ recipe?.name }}
+                                </h2>
+                                <div class="flex flex-wrap justify-center gap-2 pt-2">
+                                    <span
+                                        class="px-3 py-1 bg-pink-100 dark:bg-pink-700 text-pink-800 dark:text-pink-200 font-semibold rounded-full text-sm"
+                                        >{{ recipe?.category }}</span
+                                    >
+                                    <span
+                                        class="px-3 py-1 bg-yellow-100 dark:bg-yellow-700 text-yellow-800 dark:text-yellow-200 font-semibold rounded-full text-sm"
+                                        >{{ recipe?.area }}</span
+                                    >
+                                </div>
+                                <div class="flex flex-wrap justify-center gap-2">
+                                    <span
+                                        v-for="(tag, index) in recipe?.tags"
+                                        :key="index"
+                                        class="px-3 py-1 bg-purple-100 dark:bg-purple-700 text-purple-800 dark:text-purple-200 font-semibold rounded-full text-sm"
+                                        >{{ tag }}</span
+                                    >
+                                </div>
+                                <div v-if="recipe?.youtube">
+                                    <a
+                                        :href="recipe?.youtube"
+                                        target="_blank"
+                                        class="text-pink-600 dark:text-pink-400 hover:underline font-medium"
+                                        >▶ Watch on YouTube</a
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- Average Rating (Right side) -->
+                            <AverageRatingStars
+                                v-if="averageRating > 0"
+                                :avgRating="averageRating"
                             />
                         </div>
 
-                        <!-- Info -->
-                        <div class="w-full md:w-2/3 flex flex-col items-center gap-4 text-center">
-                            <h2
-                                class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white text-center"
-                            >
-                                {{ recipe?.name }}
-                            </h2>
-                            <div class="flex flex-wrap justify-center gap-2 pt-2">
-                                <span
-                                    class="px-3 py-1 bg-pink-100 dark:bg-pink-700 text-pink-800 dark:text-pink-200 font-semibold rounded-full text-sm"
-                                    >{{ recipe?.category }}</span
+                        <!-- Bottom Content -->
+                        <div class="flex flex-col md:flex-row gap-6 mt-6">
+                            <!-- Ingredients -->
+                            <div class="w-full md:w-auto min-w-[12rem] pl-6 pr-6 mb-4 md:mb-0">
+                                <h3
+                                    class="text-2xl font-semibold text-left text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b-4 border-gray-300 dark:border-gray-700"
                                 >
-                                <span
-                                    class="px-3 py-1 bg-yellow-100 dark:bg-yellow-700 text-yellow-800 dark:text-yellow-200 font-semibold rounded-full text-sm"
-                                    >{{ recipe?.area }}</span
-                                >
-                            </div>
-                            <div class="flex flex-wrap justify-center gap-2">
-                                <span
-                                    v-for="(tag, index) in recipe?.tags"
-                                    :key="index"
-                                    class="px-3 py-1 bg-purple-100 dark:bg-purple-700 text-purple-800 dark:text-purple-200 font-semibold rounded-full text-sm"
-                                    >{{ tag }}</span
-                                >
-                            </div>
-                            <div v-if="recipe?.youtube">
-                                <a
-                                    :href="recipe?.youtube"
-                                    target="_blank"
-                                    class="text-pink-600 dark:text-pink-400 hover:underline font-medium"
-                                    >▶ Watch on YouTube</a
-                                >
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Bottom Content -->
-                    <div class="flex flex-col md:flex-row gap-6 mt-6">
-                        <!-- Ingredients -->
-                        <div class="w-full md:w-auto min-w-[12rem] pl-6 pr-6 mb-4 md:mb-0">
-                            <h3
-                                class="text-2xl font-semibold text-left text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b-4 border-gray-300 dark:border-gray-700"
-                            >
-                                🧂 Ingredients
-                            </h3>
-                            <ul
-                                class="list-disc text-gray-700 dark:text-gray-300 space-y-1 ml-4 text-left w-auto max-w-full"
-                            >
-                                <li
-                                    v-for="(ing, index) in recipe?.ingredients"
-                                    :key="ing"
-                                    class="break-words py-1 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
-                                >
-                                    {{ recipe?.measures[index] }} {{ ing }}
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Instructions + Export -->
-                        <div class="w-full flex-1 pl-6">
-                            <div
-                                class="flex justify-between items-center mb-4 border-b-4 border-gray-300 dark:border-gray-700 pb-2"
-                            >
-                                <h3 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-                                    🍳 Instructions
+                                    🧂 Ingredients
                                 </h3>
-                                <button
-                                    @click="showExportModal = true"
-                                    class="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors text-sm"
+                                <ul
+                                    class="list-disc text-gray-700 dark:text-gray-300 space-y-1 ml-4 text-left w-auto max-w-full"
                                 >
-                                    🖨 Export / Print
-                                </button>
+                                    <li
+                                        v-for="(ing, index) in recipe?.ingredients"
+                                        :key="ing"
+                                        class="break-words py-1 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+                                    >
+                                        {{ recipe?.measures[index] }} {{ ing }}
+                                    </li>
+                                </ul>
                             </div>
-                            <p
-                                class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line text-left"
-                            >
-                                {{ recipe?.instructions }}
-                            </p>
+
+                            <!-- Instructions + Export -->
+                            <div class="w-full flex-1 pl-6">
+                                <div
+                                    class="flex justify-between items-center mb-4 border-b-4 border-gray-300 dark:border-gray-700 pb-2"
+                                >
+                                    <h3
+                                        class="text-2xl font-semibold text-gray-900 dark:text-gray-100"
+                                    >
+                                        🍳 Instructions
+                                    </h3>
+                                    <button
+                                        @click="showExportModal = true"
+                                        class="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors text-sm"
+                                    >
+                                        🖨 Export / Print
+                                    </button>
+                                </div>
+                                <p
+                                    class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line text-left"
+                                >
+                                    {{ recipe?.instructions }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <ExportModal
-            :visible="showExportModal"
-            @close="showExportModal = false"
-            @export="handleExport"
-        />
+                <!-- Right side: Reviews -->
+                <div
+                    :class="[
+                        'mt-6 rounded-2xl border-t md:border-t-0 md:border-l flex flex-col relative transition-all duration-300 ease-out',
+                        isMobile
+                            ? 'w-full p-4 bg-white/60 dark:bg-gray-900/40 border-gray-300 dark:border-gray-700'
+                            : showReviews
+                            ? 'w-full md:w-1/3 p-4 bg-white/60 dark:bg-gray-900/40 border-gray-300 dark:border-gray-700'
+                            : 'w-12 md:w-12 p-1 bg-white/10 dark:bg-gray-900/20 border-gray-100 dark:border-gray-800',
+                    ]"
+                >
+                    <!-- Toggle button (desktop only) -->
+                    <button
+                        @click="showReviews = !showReviews"
+                        class="hidden md:flex items-center justify-center absolute -left-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-md hover:scale-105 transition-transform"
+                        :aria-expanded="showReviews"
+                        :title="showReviews ? 'Close reviews' : 'Open reviews'"
+                    >
+                        <component
+                            :is="showReviews ? ChevronLeftIcon : ChevronRightIcon"
+                            class="w-5 h-5"
+                        />
+                    </button>
+
+                    <!-- Panel content -->
+                    <div
+                        class="transition-all duration-300 flex flex-col"
+                        :style="{
+                            opacity: isMobile || showReviews ? '1' : '0',
+                            height: isMobile ? 'auto' : showReviews ? '100%' : '0',
+                        }"
+                    >
+                        <ReviewSection
+                            v-if="recipe && (isMobile || showReviews)"
+                            :recipeId="recipe.recipeId"
+                            @update:avgRating="averageRating = $event"
+                            :class="[isMobile ? '' : 'flex-1']"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <ExportModal
+                :visible="showExportModal"
+                @close="showExportModal = false"
+                @export="handleExport"
+            />
+        </div>
     </div>
 </template>
 
 <script setup>
 import { fetchRecipeDetail } from "@/api/recipes.js";
+import AverageRatingStars from "@/components/reviews/AverageRatingStars.vue";
+import ReviewSection from "@/components/reviews/ReviewSection.vue";
 import CloseButton from "@/components/ui/CloseButton.vue";
 import ExportModal from "@/components/ui/ExportModal.vue";
 import { withLoadingAndErrorState } from "@/utils/apiHelper.js";
 import { exportRecipe } from "@/utils/exportHelper.js";
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/24/outline";
 
 const props = defineProps({ visible: Boolean, recipeId: String });
 const emit = defineEmits(["close"]);
@@ -141,6 +198,9 @@ const loading = ref(false);
 const error = ref(null);
 const showExportModal = ref(false);
 const exportContainer = ref(null);
+const averageRating = ref(0);
+const showReviews = ref(false);
+const isMobile = ref(false);
 
 function close() {
     emit("close");
@@ -165,6 +225,17 @@ const handleExport = async (format) => {
     showExportModal.value = false;
 };
 
+function updateIsMobile() {
+    // match tailwind's md breakpoint (768px)
+    isMobile.value = window.innerWidth < 768;
+}
+
+// run initially and on resize
+onMounted(() => {
+    updateIsMobile();
+    window.addEventListener("resize", updateIsMobile);
+});
+
 // Fetch recipe details when recipeId changes
 watch(() => props.recipeId, loadRecipe, { immediate: true });
 </script>
@@ -186,25 +257,43 @@ div[v-cloak] > div {
     animation: fadeInScale 0.2s ease-out;
 }
 
-.relative.overflow-y-auto::-webkit-scrollbar {
-    width: 8px;
+.flex-1.md\:overflow-y-auto::-webkit-scrollbar {
+    width: 3px;
 }
 
-.relative.overflow-y-auto::-webkit-scrollbar-thumb {
-    background-color: rgba(107, 114, 128, 0.4);
+.flex-1.md\:overflow-y-auto::-webkit-scrollbar-thumb {
+    background-color: rgba(107, 114, 128, 0.5);
     border-radius: 9999px;
 }
 
-.relative.overflow-y-auto::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(107, 114, 128, 0.6);
+.flex-1.md\:overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(107, 114, 128, 0.7);
 }
 
-.relative.overflow-y-auto::-webkit-scrollbar-track {
+.flex-1.md\:overflow-y-auto::-webkit-scrollbar-track {
     background: transparent;
 }
 
-.relative.overflow-y-auto {
+/* Firefox */
+.flex-1.md\:overflow-y-auto {
     scrollbar-width: thin;
-    scrollbar-color: rgba(107, 114, 128, 0.4) transparent;
+    scrollbar-color: rgba(107, 114, 128, 0.5) transparent;
+}
+
+@media (max-width: 768px) {
+    /* On mobile: the entire modal can scroll */
+    .fixed.inset-0 {
+        overflow-y: auto !important;
+    }
+
+    /* Remove duplicate scrollbars */
+    .md\:overflow-hidden {
+        overflow-y: visible !important;
+    }
+
+    /* Makes left & right sections not have their own scrollbars */
+    .md\:overflow-y-auto {
+        overflow-y: visible !important;
+    }
 }
 </style>
