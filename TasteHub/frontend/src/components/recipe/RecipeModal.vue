@@ -130,14 +130,43 @@
 
                 <!-- Right side: Reviews -->
                 <div
-                    class="w-full md:w-1/3 mt-6 bg-white/60 dark:bg-gray-900/40 rounded-2xl p-4 border-t md:border-t-0 md:border-l border-gray-300 dark:border-gray-700 flex flex-col"
+                    :class="[
+                        'mt-6 rounded-2xl border-t md:border-t-0 md:border-l flex flex-col relative transition-all duration-300 ease-out',
+                        isMobile
+                            ? 'w-full p-4 bg-white/60 dark:bg-gray-900/40 border-gray-300 dark:border-gray-700'
+                            : showReviews
+                            ? 'w-full md:w-1/3 p-4 bg-white/60 dark:bg-gray-900/40 border-gray-300 dark:border-gray-700'
+                            : 'w-12 md:w-12 p-1 bg-white/10 dark:bg-gray-900/20 border-gray-100 dark:border-gray-800',
+                    ]"
                 >
-                    <ReviewSection
-                        v-if="recipe"
-                        :recipeId="recipe.recipeId"
-                        @update:avgRating="averageRating = $event"
-                        class="flex-1"
-                    />
+                    <!-- Toggle button (desktop only) -->
+                    <button
+                        @click="showReviews = !showReviews"
+                        class="hidden md:flex items-center justify-center absolute -left-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-md hover:scale-105 transition-transform"
+                        :aria-expanded="showReviews"
+                        :title="showReviews ? 'Close reviews' : 'Open reviews'"
+                    >
+                        <component
+                            :is="showReviews ? ChevronLeftIcon : ChevronRightIcon"
+                            class="w-5 h-5"
+                        />
+                    </button>
+
+                    <!-- Panel content -->
+                    <div
+                        class="transition-all duration-300 flex flex-col"
+                        :style="{
+                            opacity: isMobile || showReviews ? '1' : '0',
+                            height: isMobile ? 'auto' : showReviews ? '100%' : '0',
+                        }"
+                    >
+                        <ReviewSection
+                            v-if="recipe && (isMobile || showReviews)"
+                            :recipeId="recipe.recipeId"
+                            @update:avgRating="averageRating = $event"
+                            :class="[isMobile ? '' : 'flex-1']"
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -158,7 +187,8 @@ import CloseButton from "@/components/ui/CloseButton.vue";
 import ExportModal from "@/components/ui/ExportModal.vue";
 import { withLoadingAndErrorState } from "@/utils/apiHelper.js";
 import { exportRecipe } from "@/utils/exportHelper.js";
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/24/outline";
 
 const props = defineProps({ visible: Boolean, recipeId: String });
 const emit = defineEmits(["close"]);
@@ -169,6 +199,8 @@ const error = ref(null);
 const showExportModal = ref(false);
 const exportContainer = ref(null);
 const averageRating = ref(0);
+const showReviews = ref(false);
+const isMobile = ref(false);
 
 function close() {
     emit("close");
@@ -192,6 +224,17 @@ const handleExport = async (format) => {
     await exportRecipe(recipe.value, format, darkMode);
     showExportModal.value = false;
 };
+
+function updateIsMobile() {
+    // match tailwind's md breakpoint (768px)
+    isMobile.value = window.innerWidth < 768;
+}
+
+// run initially and on resize
+onMounted(() => {
+    updateIsMobile();
+    window.addEventListener("resize", updateIsMobile);
+});
 
 // Fetch recipe details when recipeId changes
 watch(() => props.recipeId, loadRecipe, { immediate: true });
