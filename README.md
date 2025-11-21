@@ -38,14 +38,18 @@ The main purpose of this project is to **learn and improve my fullstack developm
   - Includes basic rendering tests for components and views
 - CI/CD with GitHub Actions
   - Automatically runs backend and frontend tests on each push or pull request
+- Recipe ratings & reviews
+  - Users can rate recipes from 1 to 5 stars  
+  - Leave optional text reviews  
+  - View average rating per recipe  
+  - See all submitted reviews with reviewer name and date 
+- Export / print recipes  
+  - Supports PDF, DOCX (Word), and plain text formats  
 
 **Planned / Future Enhancements:**
 - Add custom recipes stored in the local database
 - User authentication & profiles
-- Recipe ratings & reviews
-- Improved accessibility (ARIA roles, keyboard navigation, contrast)
 - Offline support / caching
-- Export / print recipes as PDF
 - Animations & microinteractions (hover effects, dropdowns, drag-and-drop)
 - Recipe sharing (copy link, social media, email)
 
