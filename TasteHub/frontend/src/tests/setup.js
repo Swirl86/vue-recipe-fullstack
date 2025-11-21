@@ -18,3 +18,15 @@ if (typeof global.localStorage === "undefined") {
         clear: vi.fn(() => null),
     };
 }
+
+Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: (query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+    }),
+});
