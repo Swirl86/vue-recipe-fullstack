@@ -185,10 +185,11 @@ import AverageRatingStars from "@/components/reviews/AverageRatingStars.vue";
 import ReviewSection from "@/components/reviews/ReviewSection.vue";
 import CloseButton from "@/components/ui/CloseButton.vue";
 import ExportModal from "@/components/ui/ExportModal.vue";
+import { useBreakpoints } from "@/composables";
 import { withLoadingAndErrorState } from "@/utils/apiHelper.js";
 import { exportRecipe } from "@/utils/exportHelper.js";
-import { onMounted, ref, watch } from "vue";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/24/outline";
+import { ref, watch } from "vue";
 
 const props = defineProps({ visible: Boolean, recipeId: String });
 const emit = defineEmits(["close"]);
@@ -200,7 +201,7 @@ const showExportModal = ref(false);
 const exportContainer = ref(null);
 const averageRating = ref(0);
 const showReviews = ref(false);
-const isMobile = ref(false);
+const { isMobile } = useBreakpoints();
 
 function close() {
     emit("close");
@@ -224,17 +225,6 @@ const handleExport = async (format) => {
     await exportRecipe(recipe.value, format, darkMode);
     showExportModal.value = false;
 };
-
-function updateIsMobile() {
-    // match tailwind's md breakpoint (768px)
-    isMobile.value = window.innerWidth < 768;
-}
-
-// run initially and on resize
-onMounted(() => {
-    updateIsMobile();
-    window.addEventListener("resize", updateIsMobile);
-});
 
 // Fetch recipe details when recipeId changes
 watch(() => props.recipeId, loadRecipe, { immediate: true });
@@ -280,7 +270,7 @@ div[v-cloak] > div {
     scrollbar-color: rgba(107, 114, 128, 0.5) transparent;
 }
 
-@media (max-width: 768px) {
+@media (max-width: theme("screens.md")) {
     /* On mobile: the entire modal can scroll */
     .fixed.inset-0 {
         overflow-y: auto !important;

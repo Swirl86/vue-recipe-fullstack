@@ -198,7 +198,7 @@ watch(() => props.recipeId, loadReviews);
     overflow: visible;
 }
 
-@media (max-width: 768px) {
+@media (max-width: theme("screens.md")) {
     .reviews-scroll {
         max-height: none !important;
         overflow-y: visible !important;
