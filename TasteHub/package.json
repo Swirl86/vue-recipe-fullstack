@@ -1,0 +1,13 @@
+{
+    "name": "tastehub",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "check-env": "node scripts/checkEnv.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs"
+}
