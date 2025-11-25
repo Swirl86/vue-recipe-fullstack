@@ -59,6 +59,71 @@ The main purpose of this project is to **learn and improve my fullstack developm
   
 ---
 
+## ✅ Environment Setup
+This project uses environment variables for both the backend and frontend.
+Before running the application, make sure the environment files are properly set up.
+
+### 🔧 Default environment values
+
+Each part of the project contains a .env.example file:
+```
+backend/.env.example
+frontend/.env.example
+```
+These example files include default development values that work immediately for local use.
+When a .env file is missing, the setup script will automatically create it using these defaults.
+
+You can modify the values anytime if needed, but the project will run using the provided defaults out of the box.
+
+**🔍 Step 1 - Validate your environment setup**
+From the project root, run:
+```
+node scripts/checkEnv.js
+```
+This script will:
+- Check if .env exists in both backend/ and frontend/
+- Automatically create .env from .env.example if it is missing
+- Verify that all required environment variables are present
+- Ensure that no variable is left empty or incorrectly formatted
+If any required value is missing or invalid, the script will show a clear error message and stop the process.
+
+**🚫 If something is missing**
+If placeholders, empty values, or missing variables are detected, the script will output something like:
+```
+❌ backend: MONGO_URI is missing or not configured properly
+```
+Update the generated .env file(s) with the correct values and run the script again.
+
+
+---
+
+## 🚀 Running the Project
+Once your environment files are set up and validated with ```node scripts/checkEnv.js```, you can start both the backend and frontend.
+
+**1. Start the backend**
+
+From the project root:
+```
+cd backend
+npm install
+npm run dev
+```
+- ```npm install``` installs all dependencies for the backend.
+- ```npm run dev``` runs the backend server (default port 5000).
+
+**2. Start the frontend**
+
+From the project root:
+```
+cd frontend
+npm install
+npm run dev
+```
+- ```npm install``` installs all dependencies for the frontend.
+- ```npm run dev``` starts the frontend development server (default port 5173).
+
+---
+
 ## 🧪 Testing
 
 ### Backend
